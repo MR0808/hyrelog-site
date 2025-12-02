@@ -10,6 +10,23 @@ import { siteMetadata } from "@/lib/siteMetadata";
 export const metadata: Metadata = {
   title: "Home",
   description: siteMetadata.description,
+  alternates: {
+    canonical: siteMetadata.siteUrl,
+  },
+  openGraph: {
+    title: siteMetadata.title,
+    description: siteMetadata.description,
+    url: siteMetadata.siteUrl,
+    siteName: siteMetadata.openGraph.siteName,
+    type: "website",
+    locale: "en_AU",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteMetadata.title,
+    description: siteMetadata.description,
+    creator: siteMetadata.twitter.handle,
+  },
 };
 
 function ProductMock() {
@@ -78,7 +95,7 @@ export default function Home() {
                 The audit trail API for modern SaaS and enterprise systems.
               </h1>
               <p className="mb-8 text-lg leading-relaxed text-gray-600 dark:text-gray-400">
-                HyreLog is a dedicated audit trail platform that captures every critical action in your product, secures it with cryptographic hash-chains, and makes it easy to prove what happened, when, and by whom. Stop relying on ad-hoc logs and fragile exports—use an immutable source of truth.
+                HyreLog is a dedicated audit trail platform that captures every critical action in your product, secures it with cryptographic hash-chains, and makes it easy to prove what happened, when, and by whom. Stop relying on ad-hoc logs and fragile exports, use an immutable source of truth.
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <a
@@ -171,7 +188,7 @@ export default function Home() {
                 Send events
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Your application sends JSON audit events to HyreLog whenever important actions happen—logins, permission changes, data exports, configuration updates, and more.
+                Your application sends JSON audit events to HyreLog whenever important actions happen, logins, permission changes, data exports, configuration updates, and more.
               </p>
             </div>
             <div className="text-center">
@@ -279,7 +296,7 @@ export default function Home() {
               />
               <FaqItem
                 question="Who is HyreLog for?"
-                answer="HyreLog is designed for SaaS companies, internal platform teams, and enterprise applications that need a trustworthy, centralised record of changes and access—especially when preparing for SOC 2, ISO 27001, or dealing with high-stakes data."
+                answer="HyreLog is designed for SaaS companies, internal platform teams, and enterprise applications that need a trustworthy, centralised record of changes and access, especially when preparing for SOC 2, ISO 27001, or dealing with high-stakes data."
               />
               <FaqItem
                 question="How is this different from normal application logs?"
@@ -311,23 +328,71 @@ export default function Home() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "Organization",
-            name: "HyreLog",
-            url: siteMetadata.siteUrl,
-            description: siteMetadata.description,
-            sameAs: [siteMetadata.linkedin],
-          }),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            name: "HyreLog",
-            url: siteMetadata.siteUrl,
-            description: siteMetadata.description,
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": `${siteMetadata.siteUrl}/#organization`,
+                name: "HyreLog",
+                url: siteMetadata.siteUrl,
+                logo: `${siteMetadata.siteUrl}/HyreLog%20Logo%20-%20Light.png`,
+                description: siteMetadata.description,
+                founder: {
+                  "@type": "Person",
+                  name: "Mark Rosenberg",
+                  jobTitle: "Founder",
+                  url: `${siteMetadata.siteUrl}/about`,
+                  description:
+                    "Mark Rosenberg is a product and technology leader based in Melbourne, Australia. With experience across finance, logistics, retail, education, and government, he created HyreLog to solve the complex challenge of trustworthy audit trails for modern systems.",
+                },
+                sameAs: [
+                  siteMetadata.linkedin,
+                  "https://twitter.com/hyrelog",
+                  "https://github.com/hyrelog",
+                ],
+              },
+              {
+                "@type": "WebSite",
+                "@id": `${siteMetadata.siteUrl}/#website`,
+                url: siteMetadata.siteUrl,
+                name: "HyreLog",
+                publisher: {
+                  "@id": `${siteMetadata.siteUrl}/#organization`,
+                },
+                description:
+                  "HyreLog — Secure. Immutable. Auditable. A modern audit trail API built for enterprise-grade compliance, forensic investigations, and event integrity.",
+                inLanguage: "en-AU",
+                potentialAction: {
+                  "@type": "SearchAction",
+                  target: `${siteMetadata.siteUrl}/search?q={search_term_string}`,
+                  "query-input": "required name=search_term_string",
+                },
+              },
+              {
+                "@type": "Product",
+                "@id": `${siteMetadata.siteUrl}/#product`,
+                name: "HyreLog — Audit Trail API",
+                url: siteMetadata.siteUrl,
+                description:
+                  "HyreLog is an immutable, hash-chained audit trail API that captures structured events from SaaS platforms and enterprise systems. Built for SOC 2, ISO 27001, and GDPR-aligned compliance.",
+                brand: {
+                  "@id": `${siteMetadata.siteUrl}/#organization`,
+                },
+                logo: `${siteMetadata.siteUrl}/HyreLog%20Logo%20-%20Light.png`,
+                audience: {
+                  "@type": "Audience",
+                  audienceType:
+                    "Developers, SaaS Companies, Platform Engineering Teams, Security & Compliance Teams",
+                },
+                offers: {
+                  "@type": "Offer",
+                  url: siteMetadata.siteUrl,
+                  price: "0",
+                  priceCurrency: "USD",
+                  availability: "https://schema.org/PreOrder",
+                  category: "Software",
+                },
+              },
+            ],
           }),
         }}
       />

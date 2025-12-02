@@ -1,10 +1,25 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/Container";
 import { Section } from "@/components/Section";
+import { siteMetadata } from "@/lib/siteMetadata";
 
 export const metadata: Metadata = {
   title: "Security",
   description: "HyreLog's security practices and commitment to protecting your audit trail data.",
+  alternates: {
+    canonical: `${siteMetadata.siteUrl}/security`,
+  },
+  openGraph: {
+    title: "Security | HyreLog",
+    description: "HyreLog's security practices and commitment to protecting your audit trail data.",
+    url: `${siteMetadata.siteUrl}/security`,
+    siteName: siteMetadata.openGraph.siteName,
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function SecurityPage() {

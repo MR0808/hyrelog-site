@@ -1,10 +1,25 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/Container";
 import { Section } from "@/components/Section";
+import { siteMetadata } from "@/lib/siteMetadata";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "HyreLog's commitment to privacy and data protection.",
+  alternates: {
+    canonical: `${siteMetadata.siteUrl}/privacy`,
+  },
+  openGraph: {
+    title: "Privacy Policy | HyreLog",
+    description: "HyreLog's commitment to privacy and data protection.",
+    url: `${siteMetadata.siteUrl}/privacy`,
+    siteName: siteMetadata.openGraph.siteName,
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function PrivacyPage() {

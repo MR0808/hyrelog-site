@@ -2,10 +2,21 @@ import type { Metadata } from "next";
 import { Container } from "@/components/Container";
 import { Section } from "@/components/Section";
 import { FaqItem } from "@/components/FaqItem";
+import { siteMetadata } from "@/lib/siteMetadata";
 
 export const metadata: Metadata = {
   title: "FAQ",
   description: "Frequently asked questions about HyreLog, the audit trail API for modern SaaS and enterprise systems.",
+  alternates: {
+    canonical: `${siteMetadata.siteUrl}/faq`,
+  },
+  openGraph: {
+    title: "FAQ | HyreLog",
+    description: "Frequently asked questions about HyreLog, the audit trail API for modern SaaS and enterprise systems.",
+    url: `${siteMetadata.siteUrl}/faq`,
+    siteName: siteMetadata.openGraph.siteName,
+    type: "website",
+  },
 };
 
 const faqs = [
@@ -17,7 +28,7 @@ const faqs = [
   {
     question: "Who should use HyreLog?",
     answer:
-      "HyreLog is designed for SaaS companies, internal platform teams, and enterprise applications that need a trustworthy, centralised record of changes and access—especially when preparing for SOC 2, ISO 27001, or dealing with high-stakes data. If you need to prove what happened, when, and by whom, HyreLog can help.",
+      "HyreLog is designed for SaaS companies, internal platform teams, and enterprise applications that need a trustworthy, centralised record of changes and access, especially when preparing for SOC 2, ISO 27001, or dealing with high-stakes data. If you need to prove what happened, when, and by whom, HyreLog can help.",
   },
   {
     question: "How does hash-chain immutability work in simple terms?",
@@ -27,7 +38,7 @@ const faqs = [
   {
     question: "Does HyreLog make my product 'SOC 2 compliant' on its own?",
     answer:
-      "No. HyreLog is designed to support the evidence needs of SOC 2 and similar frameworks, but it doesn't make you compliant by itself. Compliance is a broader program that includes policies, procedures, risk assessments, and multiple technical controls. HyreLog is one building block in your broader security and compliance program—specifically, it helps you maintain and prove the integrity of your audit trail evidence.",
+      "No. HyreLog is designed to support the evidence needs of SOC 2 and similar frameworks, but it doesn't make you compliant by itself. Compliance is a broader program that includes policies, procedures, risk assessments, and multiple technical controls. HyreLog is one building block in your broader security and compliance program, specifically, it helps you maintain and prove the integrity of your audit trail evidence.",
   },
   {
     question: "Where will my data be stored?",
@@ -37,7 +48,7 @@ const faqs = [
   {
     question: "Will there be on-prem or self-hosted options?",
     answer:
-      "Self-hosted options are being considered for the future, but the initial focus is on building a reliable, scalable cloud service. If you have specific requirements for on-premises deployment, please reach out—we'd love to understand your needs as we plan future offerings.",
+      "Self-hosted options are being considered for the future, but the initial focus is on building a reliable, scalable cloud service. If you have specific requirements for on-premises deployment, please reach out, we'd love to understand your needs as we plan future offerings.",
   },
   {
     question: "What will pricing look like?",
@@ -52,26 +63,45 @@ const faqs = [
 ];
 
 export default function FaqPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
   return (
-    <Section className="bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
-      <Container>
-        <div className="mx-auto max-w-3xl">
-          <div className="mb-12 text-center">
-            <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Frequently Asked Questions
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
-              Everything you need to know about HyreLog
-            </p>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <Section className="bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
+        <Container>
+          <div className="mx-auto max-w-3xl">
+            <div className="mb-12 text-center">
+              <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Frequently Asked Questions
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-400">
+                Everything you need to know about HyreLog
+              </p>
+            </div>
+            <div className="space-y-0 rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+              {faqs.map((faq, index) => (
+                <FaqItem key={index} question={faq.question} answer={faq.answer} />
+              ))}
+            </div>
           </div>
-          <div className="space-y-0 rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
-            {faqs.map((faq, index) => (
-              <FaqItem key={index} question={faq.question} answer={faq.answer} />
-            ))}
-          </div>
-        </div>
-      </Container>
-    </Section>
+        </Container>
+      </Section>
+    </>
   );
 }
 
