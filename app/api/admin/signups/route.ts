@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { isAuthenticated } from '@/lib/auth';
 
 export async function GET() {
     try {
-        // TODO: Add authentication/authorization check here
-        // For now, this is unprotected - you should add auth before deploying
+        // Check authentication
+        const authenticated = await isAuthenticated();
+        if (!authenticated) {
+            return NextResponse.json(
+                { error: 'Unauthorized' },
+                { status: 401 }
+            );
+        }
         
         if (!supabase) {
             return NextResponse.json(

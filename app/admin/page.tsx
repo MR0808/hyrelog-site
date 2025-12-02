@@ -31,6 +31,11 @@ export default function AdminPage() {
             setLoading(true);
             const response = await fetch('/api/admin/signups');
             if (!response.ok) {
+                if (response.status === 401) {
+                    // Redirect to login if unauthorized
+                    window.location.href = '/login';
+                    return;
+                }
                 throw new Error('Failed to fetch signups');
             }
             const data = await response.json();
@@ -134,13 +139,24 @@ export default function AdminPage() {
         <Section>
             <Container>
                 <div className="mx-auto max-w-6xl">
-                    <div className="mb-8">
-                        <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
-                            Early Access Signups
-                        </h1>
-                        <p className="text-gray-600 dark:text-gray-400">
-                            Manage and view all early access requests
-                        </p>
+                    <div className="mb-8 flex items-center justify-between">
+                        <div>
+                            <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
+                                Early Access Signups
+                            </h1>
+                            <p className="text-gray-600 dark:text-gray-400">
+                                Manage and view all early access requests
+                            </p>
+                        </div>
+                        <button
+                            onClick={async () => {
+                                await fetch('/api/admin/logout', { method: 'POST' });
+                                window.location.href = '/login';
+                            }}
+                            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                        >
+                            Logout
+                        </button>
                     </div>
 
                     {/* Stats */}
