@@ -68,13 +68,30 @@ You can view all signups in the Supabase dashboard:
 -   Go to **Table Editor** → `early_access_signups`
 -   You can filter, sort, and export the data
 
-## Optional: Create an Admin Page
+## Admin Page
 
-If you want a custom admin page to view signups, I can create one that:
+An admin page has been created at `/admin` to view and manage signups.
 
--   Lists all signups with pagination
--   Allows filtering by date, email, etc.
--   Shows signup statistics
--   Exports data to CSV
+### Features
 
-Let me know if you'd like me to build this!
+-   View all signups in a table
+-   Search by name, email, company, or role
+-   Sort by date, email, or name
+-   View statistics (total signups, recent signups, etc.)
+-   Export to CSV
+-   Click email addresses to open in your email client
+
+### Access
+
+1. Navigate to `/admin` in your browser
+2. The page will fetch all signups from Supabase
+
+### Security Note
+
+⚠️ **Important**: The admin page is currently unprotected. Before deploying to production, you should:
+
+1. Add authentication (e.g., NextAuth.js, Clerk, or simple password protection)
+2. Add authorization checks in the API route
+3. Consider IP whitelisting or VPN access
+
+For now, it's fine for local development, but make sure to secure it before going live!
