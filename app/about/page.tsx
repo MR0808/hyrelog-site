@@ -43,7 +43,7 @@ export default function AboutPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             {/* Hero Section */}
-            <Section className="relative overflow-hidden bg-linear-to-b from-white via-gray-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+            <Section className="relative overflow-hidden bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
                 <Container>
                     <div className="relative mx-auto max-w-4xl">
                         <div className="mb-6 inline-block rounded-full border border-gray-200 bg-white px-4 py-1.5 text-xs font-medium text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
