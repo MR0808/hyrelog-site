@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 // Hash of the password: HS8i$&N7hr@e$hXm
 // Generated with: bcrypt.hashSync('HS8i$&N7hr@e$hXm', 10)
-const PASSWORD_HASH = '$2b$10$wxbj.RYaAJL5M3sGXsR0Qe0IsXNbz.CAAjnx/kPuKQSXFinB2zpGm';
+const PASSWORD_HASH = '$2b$10$cAHbRwOUuuGSNexsYnvsUuqXegtSJF16DJldlz1N4H0RcWzUIq3He';
 
 const ADMIN_USERNAME = 'mark';
 const SESSION_COOKIE_NAME = 'admin_session';
