@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Container } from '@/components/Container';
 import { Section } from '@/components/Section';
+import { SiteStructuredData } from '@/components/SiteStructuredData';
 import { siteMetadata } from '@/lib/siteMetadata';
 
 export const metadata: Metadata = {
@@ -38,6 +39,7 @@ export default function AboutPage() {
 
     return (
         <>
+            <SiteStructuredData currentPath="/about" />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/Container";
 import { Section } from "@/components/Section";
 import { FaqItem } from "@/components/FaqItem";
+import { SiteStructuredData } from "@/components/SiteStructuredData";
 import { siteMetadata } from "@/lib/siteMetadata";
 
 export const metadata: Metadata = {
@@ -78,6 +79,7 @@ export default function FaqPage() {
 
   return (
     <>
+      <SiteStructuredData currentPath="/faq" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

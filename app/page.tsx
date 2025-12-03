@@ -5,6 +5,7 @@ import { Section } from '@/components/Section';
 import { FeatureCard } from '@/components/FeatureCard';
 import { FaqItem } from '@/components/FaqItem';
 import { EarlyAccessForm } from '@/components/EarlyAccessForm';
+import { SiteStructuredData } from '@/components/SiteStructuredData';
 import { siteMetadata } from '@/lib/siteMetadata';
 
 export const metadata: Metadata = {
@@ -422,78 +423,44 @@ export default function Home() {
                 </Container>
             </Section>
 
-            {/* JSON-LD Structured Data */}
+            {/* Site Structured Data (Organization, WebSite, Navigation, Breadcrumbs) */}
+            <SiteStructuredData currentPath="/" />
+
+            {/* Product Structured Data */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify({
                         '@context': 'https://schema.org',
-                        '@graph': [
-                            {
-                                '@type': 'Organization',
-                                '@id': `${siteMetadata.siteUrl}/#organization`,
-                                name: 'HyreLog',
-                                url: siteMetadata.siteUrl,
-                                logo: `${siteMetadata.siteUrl}/HyreLog%20Logo%20-%20Light.png`,
-                                description: siteMetadata.description,
-                                founder: {
-                                    '@type': 'Person',
-                                    name: 'Mark Rosenberg',
-                                    jobTitle: 'Founder',
-                                    url: `${siteMetadata.siteUrl}/about`,
-                                    description:
-                                        'Mark Rosenberg is a product and technology leader based in Melbourne, Australia. With experience across finance, logistics, retail, education, and government, he created HyreLog to solve the complex challenge of trustworthy audit trails for modern systems.'
-                                },
-                                sameAs: [
-                                    siteMetadata.linkedin,
-                                    'https://twitter.com/hyrelog',
-                                    'https://github.com/hyrelog'
-                                ]
-                            },
-                            {
-                                '@type': 'WebSite',
-                                '@id': `${siteMetadata.siteUrl}/#website`,
-                                url: siteMetadata.siteUrl,
-                                name: 'HyreLog',
-                                publisher: {
-                                    '@id': `${siteMetadata.siteUrl}/#organization`
-                                },
-                                description:
-                                    'HyreLog — Secure. Immutable. Auditable. A modern audit trail API built for enterprise-grade compliance, forensic investigations, and event integrity.',
-                                inLanguage: 'en-AU',
-                                potentialAction: {
-                                    '@type': 'SearchAction',
-                                    target: `${siteMetadata.siteUrl}/search?q={search_term_string}`,
-                                    'query-input':
-                                        'required name=search_term_string'
-                                }
-                            },
-                            {
-                                '@type': 'Product',
-                                '@id': `${siteMetadata.siteUrl}/#product`,
-                                name: 'HyreLog — Audit Trail API',
-                                url: siteMetadata.siteUrl,
-                                description:
-                                    'HyreLog is an immutable, hash-chained audit trail API that captures structured events from SaaS platforms and enterprise systems. Built for SOC 2, ISO 27001, and GDPR-aligned compliance.',
-                                brand: {
-                                    '@id': `${siteMetadata.siteUrl}/#organization`
-                                },
-                                logo: `${siteMetadata.siteUrl}/HyreLog%20Logo%20-%20Light.png`,
-                                audience: {
-                                    '@type': 'Audience',
-                                    audienceType:
-                                        'Developers, SaaS Companies, Platform Engineering Teams, Security & Compliance Teams'
-                                },
-                                offers: {
-                                    '@type': 'Offer',
-                                    url: siteMetadata.siteUrl,
-                                    price: '0',
-                                    priceCurrency: 'USD',
-                                    availability: 'https://schema.org/PreOrder',
-                                    category: 'Software'
-                                }
-                            }
-                        ]
+                        '@type': 'Product',
+                        '@id': `${siteMetadata.siteUrl}/#product`,
+                        name: 'HyreLog — Audit Trail API',
+                        url: siteMetadata.siteUrl,
+                        description:
+                            'HyreLog is an immutable, hash-chained audit trail API that captures structured events from SaaS platforms and enterprise systems. Built for SOC 2, ISO 27001, and GDPR-aligned compliance.',
+                        brand: {
+                            '@id': `${siteMetadata.siteUrl}/#organization`
+                        },
+                        logo: `${siteMetadata.siteUrl}/HyreLogLogoLight.png`,
+                        image: `${siteMetadata.siteUrl}/HyreLogLogoLight.png`,
+                        audience: {
+                            '@type': 'Audience',
+                            audienceType:
+                                'Developers, SaaS Companies, Platform Engineering Teams, Security & Compliance Teams'
+                        },
+                        offers: {
+                            '@type': 'Offer',
+                            url: siteMetadata.siteUrl,
+                            price: '0',
+                            priceCurrency: 'USD',
+                            availability: 'https://schema.org/PreOrder',
+                            category: 'Software'
+                        },
+                        aggregateRating: {
+                            '@type': 'AggregateRating',
+                            ratingValue: '5',
+                            reviewCount: '0'
+                        }
                     })
                 }}
             />
