@@ -15,10 +15,7 @@ const MDXRenderer = dynamic(
 );
 
 const ArticleTOC = dynamic(
-  () => import('@/components/blog/ArticleTOC').then((mod) => ({ default: mod.ArticleTOC })),
-  {
-    ssr: false, // TOC doesn't need SSR, it's client-side only
-  }
+  () => import('@/components/blog/ArticleTOC').then((mod) => ({ default: mod.ArticleTOC }))
 );
 import {
   getBlogPost,
