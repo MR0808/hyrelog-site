@@ -1,15 +1,32 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { BlogCard } from '@/components/blog/BlogCard';
-import { BlogListItem } from '@/components/blog/BlogListItem';
-import { BlogSearch } from '@/components/blog/BlogSearch';
-import { BlogFilters } from '@/components/blog/BlogFilters';
-import { BlogSort } from '@/components/blog/BlogSort';
-import { BlogViewToggle } from '@/components/blog/BlogViewToggle';
-import { BlogPagination } from '@/components/blog/BlogPagination';
+import dynamic from 'next/dynamic';
 import { Container } from '@/components/Container';
 import { BlogPost } from '@/lib/blog';
+
+// Dynamically import blog components to reduce initial bundle size
+const BlogCard = dynamic(
+  () => import('@/components/blog/BlogCard').then((mod) => ({ default: mod.BlogCard }))
+);
+const BlogListItem = dynamic(
+  () => import('@/components/blog/BlogListItem').then((mod) => ({ default: mod.BlogListItem }))
+);
+const BlogSearch = dynamic(
+  () => import('@/components/blog/BlogSearch').then((mod) => ({ default: mod.BlogSearch }))
+);
+const BlogFilters = dynamic(
+  () => import('@/components/blog/BlogFilters').then((mod) => ({ default: mod.BlogFilters }))
+);
+const BlogSort = dynamic(
+  () => import('@/components/blog/BlogSort').then((mod) => ({ default: mod.BlogSort }))
+);
+const BlogViewToggle = dynamic(
+  () => import('@/components/blog/BlogViewToggle').then((mod) => ({ default: mod.BlogViewToggle }))
+);
+const BlogPagination = dynamic(
+  () => import('@/components/blog/BlogPagination').then((mod) => ({ default: mod.BlogPagination }))
+);
 
 interface BlogIndexClientProps {
   initialPosts: BlogPost[];
@@ -85,63 +102,71 @@ export function BlogIndexClient({ initialPosts, categories }: BlogIndexClientPro
           </p>
         </div>
 
-        {/* Filters and Search */}
-        <div className="mb-8 grid gap-6 lg:grid-cols-4">
+        {/* Main Content Grid */}
+        <div className="grid gap-8 lg:grid-cols-4">
+          {/* Main Content Area */}
           <div className="lg:col-span-3">
-            <div className="mb-4">
-              <BlogSearch value={searchQuery} onChange={setSearchQuery} />
+            {/* Search and Sort Bar */}
+            <div className="mb-6">
+              <div className="mb-4">
+                <BlogSearch value={searchQuery} onChange={setSearchQuery} />
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <BlogSort value={sortBy} onChange={setSortBy} />
+                <BlogViewToggle view={viewMode} onChange={setViewMode} />
+              </div>
             </div>
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <BlogSort value={sortBy} onChange={setSortBy} />
-              <BlogViewToggle view={viewMode} onChange={setViewMode} />
+
+            {/* Results count */}
+            <div className="mb-6 text-sm text-gray-600 dark:text-gray-400">
+              Showing {paginatedPosts.length} of {filteredAndSortedPosts.length} posts
             </div>
-          </div>
-          <div className="lg:col-span-1">
-            <BlogFilters categories={categories} />
-          </div>
-        </div>
 
-        {/* Results count */}
-        <div className="mb-6 text-sm text-gray-600 dark:text-gray-400">
-          Showing {paginatedPosts.length} of {filteredAndSortedPosts.length} posts
-        </div>
-
-        {/* Blog Posts */}
-        {paginatedPosts.length === 0 ? (
-          <div className="py-12 text-center">
-            <p className="text-gray-600 dark:text-gray-400">
-              No blog posts found. Try adjusting your search or filters.
-            </p>
-          </div>
-        ) : (
-          <>
-            {viewMode === 'grid' ? (
-              <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {paginatedPosts.map((post) => (
-                  <BlogCard key={post.slug} post={post} />
-                ))}
+            {/* Blog Posts */}
+            {paginatedPosts.length === 0 ? (
+              <div className="py-12 text-center">
+                <p className="text-gray-600 dark:text-gray-400">
+                  No blog posts found. Try adjusting your search or filters.
+                </p>
               </div>
             ) : (
-              <div className="mb-12 space-y-6">
-                {paginatedPosts.map((post) => (
-                  <BlogListItem key={post.slug} post={post} />
-                ))}
-              </div>
-            )}
+              <>
+                {viewMode === 'grid' ? (
+                  <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-2">
+                    {paginatedPosts.map((post) => (
+                      <BlogCard key={post.slug} post={post} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mb-12 space-y-6">
+                    {paginatedPosts.map((post) => (
+                      <BlogListItem key={post.slug} post={post} />
+                    ))}
+                  </div>
+                )}
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <BlogPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                pageSize={pageSize}
-                onPageSizeChange={setPageSize}
-                totalPosts={filteredAndSortedPosts.length}
-              />
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <BlogPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    pageSize={pageSize}
+                    onPageSizeChange={setPageSize}
+                    totalPosts={filteredAndSortedPosts.length}
+                  />
+                )}
+              </>
             )}
-          </>
-        )}
+          </div>
+
+          {/* Sidebar - Categories */}
+          <aside className="lg:col-span-1">
+            <div className="sticky top-24">
+              <BlogFilters categories={categories} />
+            </div>
+          </aside>
+        </div>
       </div>
     </Container>
   );

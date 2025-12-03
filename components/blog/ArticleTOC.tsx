@@ -20,16 +20,22 @@ export function ArticleTOC({ content }: ArticleTOCProps) {
     // Extract headings from MDX content
     const headingRegex = /^(#{1,6})\s+(.+)$/gm;
     const matches: Heading[] = [];
+    const idCounts = new Map<string, number>();
     let match;
 
     while ((match = headingRegex.exec(content)) !== null) {
       const level = match[1].length;
       const text = match[2].trim();
-      const id = text
+      let baseId = text
         .toLowerCase()
         .replace(/[^\w\s-]/g, '')
         .replace(/\s+/g, '-')
         .replace(/-+/g, '-');
+
+      // Handle duplicate IDs by appending a counter
+      const count = idCounts.get(baseId) || 0;
+      idCounts.set(baseId, count + 1);
+      const id = count > 0 ? `${baseId}-${count}` : baseId;
 
       matches.push({ id, text, level });
     }
@@ -96,9 +102,9 @@ export function ArticleTOC({ content }: ArticleTOCProps) {
           Table of Contents
         </h3>
         <nav className="space-y-1">
-          {headings.map((heading) => (
+          {headings.map((heading, index) => (
             <button
-              key={heading.id}
+              key={`${heading.id}-${index}`}
               onClick={() => handleClick(heading.id)}
               className={`block w-full text-left text-sm transition-colors ${
                 heading.level === 1

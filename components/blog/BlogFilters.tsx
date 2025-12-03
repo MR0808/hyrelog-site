@@ -28,11 +28,12 @@ export function BlogFilters({ categories, selectedCategory }: BlogFiltersProps) 
           All Posts
         </Link>
         {categories.map((category) => {
-          const isSelected = selectedCategory?.toLowerCase() === category.toLowerCase();
+          const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
+          const isSelected = selectedCategory?.toLowerCase().replace(/\s+/g, '-') === categorySlug;
           return (
             <Link
               key={category}
-              href={`/blog/categories/${encodeURIComponent(category.toLowerCase())}`}
+              href={`/blog/categories/${categorySlug}`}
               className={`block rounded-lg px-3 py-2 text-sm transition-colors ${
                 isSelected
                   ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'

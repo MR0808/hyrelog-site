@@ -1,11 +1,19 @@
 ---
-title: "Audit Logging in Microservices: Challenges and Solutions"
-description: "Explore the unique challenges of audit logging in microservices architectures and learn patterns for maintaining comprehensive audit trails across distributed systems."
-date: "2025-02-10"
-author: "Mark Rosenberg"
-categories: ["Architecture", "Microservices", "Audit Trails"]
-slug: "microservices-audit-logging"
-ogImage: "/og/blog-microservices-audit-logging.png"
+title: 'Audit Logging in Microservices: Challenges and Solutions'
+subtitle: 'Maintaining comprehensive audit trails across distributed systems'
+description: 'Explore the unique challenges of audit logging in microservices architectures and learn patterns for maintaining comprehensive audit trails across distributed systems.'
+date: '2025-02-10'
+updatedAt: '2025-02-20'
+author: 'Mark Rosenberg'
+authorUrl: 'https://hyrelog.com/about'
+categories: ['Architecture', 'Microservices', 'Audit Trails']
+tags: ['microservices', 'distributed systems', 'audit trails', 'architecture', 'correlation IDs']
+slug: 'microservices-audit-logging'
+canonicalUrl: 'https://hyrelog.com/blog/microservices-audit-logging'
+ogImage: '/og/blog-microservices-audit-logging.png'
+ogImageAlt: 'Microservices architecture diagram with audit trail connections'
+readingTimeMinutes: 14
+draft: false
 ---
 
 # Audit Logging in Microservices: Challenges and Solutions
@@ -19,38 +27,42 @@ In a monolithic application, audit logging is relatively straightforward: events
 ### Distributed Events
 
 A single business operation might involve multiple services:
-- A user update might trigger events in the user service, notification service, and analytics service
-- An order creation might involve the order service, payment service, inventory service, and shipping service
-- A data export might span the data service, storage service, and email service
+
+-   A user update might trigger events in the user service, notification service, and analytics service
+-   An order creation might involve the order service, payment service, inventory service, and shipping service
+-   A data export might span the data service, storage service, and email service
 
 How do you correlate these events to understand the complete picture?
 
 ### Inconsistent Logging
 
 Each service might log events differently:
-- Different formats (JSON, CSV, structured, unstructured)
-- Different fields (some include user context, others don't)
-- Different levels of detail
-- Different retention policies
+
+-   Different formats (JSON, CSV, structured, unstructured)
+-   Different fields (some include user context, others don't)
+-   Different levels of detail
+-   Different retention policies
 
 This inconsistency makes it difficult to get a unified view of what happened.
 
 ### Timing and Ordering
 
 Events happen asynchronously across services:
-- Network latency means events might arrive out of order
-- Services might be down when events occur
-- Retries and eventual consistency complicate ordering
+
+-   Network latency means events might arrive out of order
+-   Services might be down when events occur
+-   Retries and eventual consistency complicate ordering
 
 How do you determine the true sequence of events?
 
 ### Service Boundaries
 
 Understanding which service is responsible for logging what:
-- Should each service log its own events?
-- Should there be a centralized audit logging service?
-- How do you avoid duplicate logging?
-- How do you ensure nothing is missed?
+
+-   Should each service log its own events?
+-   Should there be a centralised audit logging service?
+-   How do you avoid duplicate logging?
+-   How do you ensure nothing is missed?
 
 ## Core Principles for Microservices Audit Logging
 
@@ -68,9 +80,9 @@ While services maintain autonomy, they should use a consistent event structure. 
 
 Use correlation IDs (also called trace IDs or request IDs) to link events across services that are part of the same business operation.
 
-### 4. Centralized Collection
+### 4. Centralised Collection
 
-While logging is distributed, collection and storage should be centralized (or at least queryable from a central location) to enable unified analysis.
+While logging is distributed, collection and storage should be centralised (or at least queryable from a central location) to enable unified analysis.
 
 ### 5. Event Ordering
 
@@ -85,22 +97,22 @@ Each service logs events independently but includes correlation IDs:
 ```typescript
 // User Service
 await auditLog.log({
-  correlation_id: requestId,
-  service: 'user-service',
-  actor: getCurrentActor(),
-  action: 'update',
-  resource: { type: 'user', id: userId },
-  timestamp: new Date()
+    correlation_id: requestId,
+    service: 'user-service',
+    actor: getCurrentActor(),
+    action: 'update',
+    resource: { type: 'user', id: userId },
+    timestamp: new Date()
 });
 
 // Notification Service (triggered by user update)
 await auditLog.log({
-  correlation_id: requestId, // Same correlation ID
-  service: 'notification-service',
-  actor: { type: 'system', service: 'user-service' },
-  action: 'send',
-  resource: { type: 'notification', user_id: userId },
-  timestamp: new Date()
+    correlation_id: requestId, // Same correlation ID
+    service: 'notification-service',
+    actor: { type: 'system', service: 'user-service' },
+    action: 'send',
+    resource: { type: 'notification', user_id: userId },
+    timestamp: new Date()
 });
 ```
 
@@ -114,46 +126,46 @@ Use event sourcing where events are the source of truth:
 ```typescript
 // Each service emits events to an event store
 await eventStore.append({
-  type: 'user.updated',
-  service: 'user-service',
-  correlation_id: requestId,
-  actor: getCurrentActor(),
-  payload: { userId, changes }
+    type: 'user.updated',
+    service: 'user-service',
+    correlation_id: requestId,
+    actor: getCurrentActor(),
+    payload: { userId, changes }
 });
 
 // Other services subscribe to events
 eventBus.subscribe('user.updated', async (event) => {
-  // Process the event and log audit trail
-  await auditLog.log({
-    correlation_id: event.correlation_id,
-    service: 'notification-service',
-    triggered_by: event,
-    action: 'send_notification',
-    resource: { type: 'user', id: event.payload.userId }
-  });
+    // Process the event and log audit trail
+    await auditLog.log({
+        correlation_id: event.correlation_id,
+        service: 'notification-service',
+        triggered_by: event,
+        action: 'send_notification',
+        resource: { type: 'user', id: event.payload.userId }
+    });
 });
 ```
 
 **Pros**: Complete audit trail, events are source of truth, enables replay
 **Cons**: Significant architectural change, more complex
 
-### Pattern 3: Centralized Audit Service
+### Pattern 3: Centralised Audit Service
 
 All services send audit events to a dedicated audit logging service:
 
 ```typescript
 // Each service sends events to audit service
 await auditService.log({
-  service: 'user-service',
-  correlation_id: requestId,
-  actor: getCurrentActor(),
-  action: 'update',
-  resource: { type: 'user', id: userId },
-  timestamp: new Date()
+    service: 'user-service',
+    correlation_id: requestId,
+    actor: getCurrentActor(),
+    action: 'update',
+    resource: { type: 'user', id: userId },
+    timestamp: new Date()
 });
 ```
 
-**Pros**: Consistent structure, centralized storage, easier querying
+**Pros**: Consistent structure, centralised storage, easier querying
 **Cons**: Single point of failure, network dependency, potential bottleneck
 
 ### Pattern 4: Sidecar Pattern
@@ -163,10 +175,10 @@ Use a sidecar (like Envoy proxy) to automatically log API calls:
 ```yaml
 # Envoy configuration automatically logs all API calls
 access_log:
-  - name: envoy.file_access_log
-    typed_config:
-      "@type": type.googleapis.com/envoy.extensions.access_loggers.file.v3.FileAccessLog
-      path: /var/log/audit.log
+    - name: envoy.file_access_log
+      typed_config:
+          '@type': type.googleapis.com/envoy.extensions.access_loggers.file.v3.FileAccessLog
+          path: /var/log/audit.log
 ```
 
 **Pros**: Automatic, consistent, no code changes needed
@@ -187,9 +199,10 @@ req.headers['x-correlation-id'] = correlationId;
 
 // Pass through all services
 app.use((req, res, next) => {
-  req.correlationId = req.headers['x-correlation-id'] || generateCorrelationId();
-  res.setHeader('x-correlation-id', req.correlationId);
-  next();
+    req.correlationId =
+        req.headers['x-correlation-id'] || generateCorrelationId();
+    res.setHeader('x-correlation-id', req.correlationId);
+    next();
 });
 ```
 
@@ -199,11 +212,11 @@ Always include the correlation ID in audit events:
 
 ```typescript
 await auditLog.log({
-  correlation_id: req.correlationId,
-  service: serviceName,
-  actor: getCurrentActor(),
-  action: 'update',
-  resource: { type: 'user', id: userId }
+    correlation_id: req.correlationId,
+    service: serviceName,
+    actor: getCurrentActor(),
+    action: 'update',
+    resource: { type: 'user', id: userId }
 });
 ```
 
@@ -214,7 +227,7 @@ Use correlation IDs to reconstruct complete operations:
 ```typescript
 // Get all events for a single operation
 const events = await auditLog.query({
-  correlation_id: requestId
+    correlation_id: requestId
 });
 
 // Events are from multiple services but linked by correlation ID
@@ -223,20 +236,21 @@ const events = await auditLog.query({
 // analytics-service: event tracked
 ```
 
-## Event Structure Standardization
+## Event Structure Standardisation
 
-While services maintain autonomy, standardize the event structure:
+While services maintain autonomy, standardise the event structure:
 
 ### Standard Fields
 
 Every event should include:
-- `correlation_id`: Links events across services
-- `service`: Which service generated the event
-- `actor`: Who or what performed the action
-- `action`: What action was performed
-- `resource`: What resource was affected
-- `timestamp`: When it happened
-- `metadata`: Additional context
+
+-   `correlation_id: Links events across services`
+-   `service: Which service generated the event`
+-   `actor: Who or what performed the action`
+-   `action: What action was performed`
+-   `resource: What resource was affected`
+-   `timestamp: When it happened`
+-   `metadata: Additional context`
 
 ### Service-Specific Fields
 
@@ -271,22 +285,22 @@ When services communicate via message queues, log both the message send and rece
 // Sender service
 await messageQueue.publish('user.updated', payload);
 await auditLog.log({
-  service: 'user-service',
-  action: 'publish_message',
-  resource: { type: 'message', topic: 'user.updated' },
-  correlation_id: requestId
+    service: 'user-service',
+    action: 'publish_message',
+    resource: { type: 'message', topic: 'user.updated' },
+    correlation_id: requestId
 });
 
 // Receiver service
 await messageQueue.subscribe('user.updated', async (message) => {
-  await auditLog.log({
-    service: 'notification-service',
-    action: 'receive_message',
-    resource: { type: 'message', topic: 'user.updated' },
-    correlation_id: message.correlation_id,
-    triggered_by: { service: 'user-service', message_id: message.id }
-  });
-  // Process message...
+    await auditLog.log({
+        service: 'notification-service',
+        action: 'receive_message',
+        resource: { type: 'message', topic: 'user.updated' },
+        correlation_id: message.correlation_id,
+        triggered_by: { service: 'user-service', message_id: message.id }
+    });
+    // Process message...
 });
 ```
 
@@ -296,16 +310,16 @@ Accept that events might arrive out of order and use timestamps and sequence num
 
 ```typescript
 await auditLog.log({
-  ...event,
-  timestamp: new Date(),
-  sequence_number: await getNextSequenceNumber(),
-  service_timestamp: Date.now() // Local service timestamp
+    ...event,
+    timestamp: new Date(),
+    sequence_number: await getNextSequenceNumber(),
+    service_timestamp: Date.now() // Local service timestamp
 });
 ```
 
-## Centralized Querying
+## Centralised Querying
 
-Even if logging is distributed, enable centralized querying:
+Even if logging is distributed, enable centralised querying:
 
 ### Unified Query Interface
 
@@ -314,14 +328,14 @@ Provide a single API to query events across all services:
 ```typescript
 // Query events across all services
 const events = await auditService.query({
-  correlation_id: requestId,
-  // Returns events from user-service, notification-service, etc.
+    correlation_id: requestId
+    // Returns events from user-service, notification-service, etc.
 });
 
 // Query by actor across services
 const userEvents = await auditService.query({
-  actor: { type: 'user', id: userId },
-  // Returns events from all services where this user acted
+    actor: { type: 'user', id: userId }
+    // Returns events from all services where this user acted
 });
 ```
 
@@ -345,7 +359,7 @@ const operation = await auditService.reconstructOperation(requestId);
 
 Implement correlation IDs early. They're the foundation for everything else.
 
-### 2. Standardize Event Structure
+### 2. Standardise Event Structure
 
 Define a standard event structure that all services use, while allowing service-specific extensions.
 
@@ -387,15 +401,14 @@ Find the right balance—log business-significant events, not every internal ope
 
 Don't forget to log message queue events, background jobs, and scheduled tasks.
 
-### No Centralized Querying
+### No Centralised Querying
 
 If you can't query events across services, you can't understand complete operations.
 
 ## Conclusion
 
-Audit logging in microservices is challenging but manageable with the right patterns and discipline. The key is to balance service autonomy with consistency, use correlation IDs to link events, standardize event structures, and enable centralized querying.
+Audit logging in microservices is challenging but manageable with the right patterns and discipline. The key is to balance service autonomy with consistency, use correlation IDs to link events, standardise event structures, and enable centralised querying.
 
-Start simple with correlation IDs and distributed logging, then evolve to more sophisticated patterns like event sourcing or centralized audit services as your needs grow. The important thing is to begin logging comprehensively from the start—retroactively adding audit logging to microservices is much harder than building it in from the beginning.
+Start simple with correlation IDs and distributed logging, then evolve to more sophisticated patterns like event sourcing or centralised audit services as your needs grow. The important thing is to begin logging comprehensively from the start—retroactively adding audit logging to microservices is much harder than building it in from the beginning.
 
 Remember: in microservices, audit trails aren't just about compliance—they're essential for understanding how your distributed system actually works, debugging issues, and maintaining operational visibility across service boundaries.
-

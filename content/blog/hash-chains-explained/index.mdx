@@ -1,11 +1,19 @@
 ---
-title: "Hash Chains Explained: How Cryptographic Integrity Works"
-description: "Dive deep into hash chains, the cryptographic technique that makes audit trails tamper-proof and provides mathematical guarantees of data integrity."
-date: "2025-01-20"
-author: "Mark Rosenberg"
-categories: ["Security", "Audit Trails", "Cryptography"]
-slug: "hash-chains-explained"
-ogImage: "/og/blog-hash-chains-explained.png"
+title: 'Hash Chains Explained: How Cryptographic Integrity Works'
+subtitle: 'The mathematical foundation that makes audit trails tamper-proof'
+description: 'Dive deep into hash chains, the cryptographic technique that makes audit trails tamper-proof and provides mathematical guarantees of data integrity.'
+date: '2025-01-20'
+updatedAt: '2025-02-01'
+author: 'Mark Rosenberg'
+authorUrl: 'https://hyrelog.com/about'
+categories: ['Security', 'Audit Trails', 'Cryptography']
+tags: ['hash chains', 'cryptography', 'immutable logging', 'data integrity', 'security']
+slug: 'hash-chains-explained'
+canonicalUrl: 'https://hyrelog.com/blog/hash-chains-explained'
+ogImage: '/og/blog-hash-chains-explained.png'
+ogImageAlt: 'Visual representation of cryptographic hash chain blocks linked together'
+readingTimeMinutes: 10
+draft: false
 ---
 
 # Hash Chains Explained: How Cryptographic Integrity Works
@@ -36,7 +44,7 @@ A cryptographic hash function takes an input of any size and produces a fixed-si
 
 Common hash functions include SHA-256 (used in Bitcoin) and SHA-512, which are considered secure for current cryptographic purposes.
 
-### Example Hash Behavior
+### Example Hash Behaviour
 
 ```
 Input: "Hello, World!"
@@ -53,6 +61,7 @@ Notice how changing just one character (removing the exclamation mark) completel
 ### Basic Structure
 
 In a hash chain, each entry contains:
+
 1. The event data itself
 2. A hash of the previous entry
 3. Optionally, a hash of the current entry (for verification)
@@ -106,9 +115,9 @@ This becomes computationally infeasible, especially if the hash chain is stored 
 
 Hash chains provide mathematical guarantees of immutability. Unlike traditional logs stored in files that can be edited, hash chains make it impossible to modify historical entries without detection, assuming:
 
-- The hash function is cryptographically secure
-- The chain is stored in a tamper-resistant manner
-- Verification is performed regularly
+-   The hash function is cryptographically secure
+-   The chain is stored in a tamper-resistant manner
+-   Verification is performed regularly
 
 ### Compliance and Legal Evidence
 
@@ -121,17 +130,19 @@ HyreLog implements hash chains as the foundation of its audit trail system. Here
 ### Event Structure
 
 Each event in HyreLog includes:
-- Event metadata (actor, action, resource, timestamp)
-- Event payload (structured JSON data)
-- Previous event hash (linking to the previous event)
-- Event signature (cryptographic proof of authenticity)
+
+-   Event metadata (actor, action, resource, timestamp)
+-   Event payload (structured JSON data)
+-   Previous event hash (linking to the previous event)
+-   Event signature (cryptographic proof of authenticity)
 
 ### Chain Verification
 
 HyreLog automatically verifies the hash chain integrity:
-- On ingestion: Each new event is validated against the previous event's hash
-- On retrieval: Events are verified when queried
-- Periodic audits: The entire chain can be verified end-to-end
+
+-   On ingestion: Each new event is validated against the previous event's hash
+-   On retrieval: Events are verified when queried
+-   Periodic audits: The entire chain can be verified end-to-end
 
 ### Distributed Storage
 
@@ -144,9 +155,10 @@ While hash chains provide strong integrity guarantees, they're not a panacea:
 ### Forward-Only Protection
 
 Hash chains protect against modification of historical entries, but they don't prevent:
-- Deletion of entries (though this can be detected if the chain is stored redundantly)
-- Addition of fraudulent entries at the end (though signatures can help prevent this)
-- Denial of service attacks
+
+-   Deletion of entries (though this can be detected if the chain is stored redundantly)
+-   Addition of fraudulent entries at the end (though signatures can help prevent this)
+-   Denial of service attacks
 
 ### Storage Requirements
 
@@ -192,9 +204,9 @@ Clearly document how your hash chain works, including the hash function used, th
 
 Hash chains are evolving with new technologies:
 
-- **Blockchain Integration**: Some systems are exploring blockchain-based hash chains for additional decentralization and tamper-resistance
-- **Quantum Resistance**: As quantum computing advances, post-quantum hash functions may become necessary
-- **Efficient Verification**: New techniques are being developed to make hash chain verification more efficient for very long chains
+-   **Blockchain Integration**: Some systems are exploring blockchain-based hash chains for additional decentralisation and tamper-resistance
+-   **Quantum Resistance**: As quantum computing advances, post-quantum hash functions may become necessary
+-   **Efficient Verification**: New techniques are being developed to make hash chain verification more efficient for very long chains
 
 ## Conclusion
 
@@ -202,5 +214,4 @@ Hash chains are a powerful cryptographic technique that provides mathematical gu
 
 Understanding how hash chains work helps you appreciate why they're the foundation of trustworthy audit trail systems. Whether you're building your own system or evaluating solutions like HyreLog, hash chains are a critical component that shouldn't be overlooked.
 
-The mathematical guarantees they provide—that tampering is detectable—give organizations confidence that their audit logs are authentic and reliable, which is essential for operating securely and maintaining compliance in today's regulatory environment.
-
+The mathematical guarantees they provide—that tampering is detectable—give organisations confidence that their audit logs are authentic and reliable, which is essential for operating securely and maintaining compliance in today's regulatory environment.

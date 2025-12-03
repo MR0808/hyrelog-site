@@ -59,6 +59,9 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <head>
+                {/* Preconnect to external domains for faster loading */}
+                <link rel="preconnect" href="https://cloud.umami.is" />
+                <link rel="dns-prefetch" href="https://cloud.umami.is" />
                 <script
                     defer
                     src="https://cloud.umami.is/script.js"
@@ -67,6 +70,7 @@ export default function RootLayout({
             </head>
             <body
                 className={`${inter.variable} min-h-screen bg-white font-sans antialiased dark:bg-gradient-to-b dark:from-gray-950 dark:to-gray-900 dark:text-gray-100`}
+                suppressHydrationWarning
             >
                 <ThemeProvider>
                     <div className="flex min-h-screen flex-col bg-white dark:bg-gray-950">

@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { BlogPost } from '@/lib/blog';
 
 interface BlogCardProps {
@@ -7,6 +10,15 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ post }: BlogCardProps) {
+  const router = useRouter();
+
+  const handleCategoryClick = (e: React.MouseEvent, category: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
+    router.push(`/blog/categories/${categorySlug}`);
+  };
+
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -24,14 +36,13 @@ export function BlogCard({ post }: BlogCardProps) {
       <div className="p-6">
         <div className="mb-3 flex flex-wrap gap-2">
           {post.categories.slice(0, 3).map((category) => (
-            <Link
+            <button
               key={category}
-              href={`/blog/categories/${encodeURIComponent(category.toLowerCase())}`}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => handleCategoryClick(e, category)}
               className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               {category}
-            </Link>
+            </button>
           ))}
         </div>
         <h3 className="mb-2 text-xl font-semibold text-gray-900 transition-colors group-hover:text-gray-700 dark:text-white dark:group-hover:text-gray-300">

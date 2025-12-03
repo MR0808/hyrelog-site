@@ -1,11 +1,25 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import type { Metadata } from 'next';
 import { Container } from '@/components/Container';
-import { MDXRenderer } from '@/components/blog/MDXRenderer';
-import { ArticleTOC } from '@/components/blog/ArticleTOC';
 import { BlogCard } from '@/components/blog/BlogCard';
+
+// Dynamically import heavy components to reduce initial bundle size
+const MDXRenderer = dynamic(
+  () => import('@/components/blog/MDXRenderer').then((mod) => ({ default: mod.MDXRenderer })),
+  {
+    loading: () => <div className="animate-pulse">Loading content...</div>,
+  }
+);
+
+const ArticleTOC = dynamic(
+  () => import('@/components/blog/ArticleTOC').then((mod) => ({ default: mod.ArticleTOC })),
+  {
+    ssr: false, // TOC doesn't need SSR, it's client-side only
+  }
+);
 import {
   getBlogPost,
   getBlogPostMDX,
@@ -37,11 +51,12 @@ export async function generateMetadata({
     };
   }
 
-  const url = `${siteMetadata.siteUrl}/blog/${post.slug}`;
+  const url = post.canonicalUrl || `${siteMetadata.siteUrl}/blog/${post.slug}`;
 
   return {
     title: `HyreLog Blog — ${post.title}`,
     description: post.description,
+    keywords: post.tags?.join(', ') || post.categories.join(', '),
     alternates: {
       canonical: url,
     },
@@ -51,13 +66,16 @@ export async function generateMetadata({
       url,
       type: 'article',
       publishedTime: post.date,
+      modifiedTime: post.updatedAt,
       authors: [post.author],
+      section: post.categories[0],
+      tags: post.tags || post.categories,
       images: [
         {
           url: `${siteMetadata.siteUrl}${post.ogImage}`,
           width: 1200,
           height: 630,
-          alt: post.title,
+          alt: post.ogImageAlt || post.title,
         },
       ],
     },
@@ -81,17 +99,26 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const relatedPosts = await getRelatedPosts(post.slug, post.categories, 3);
 
+  // Enhanced JSON-LD structured data for SEO
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'BlogPosting',
     headline: post.title,
+    alternativeHeadline: post.subtitle,
     description: post.description,
-    image: `${siteMetadata.siteUrl}${post.ogImage}`,
+    image: {
+      '@type': 'ImageObject',
+      url: `${siteMetadata.siteUrl}${post.ogImage}`,
+      width: 1200,
+      height: 630,
+      alt: post.ogImageAlt || post.title,
+    },
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updatedAt || post.date,
     author: {
       '@type': 'Person',
       name: post.author,
+      url: post.authorUrl || `${siteMetadata.siteUrl}/about`,
     },
     publisher: {
       '@type': 'Organization',
@@ -99,8 +126,27 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       logo: {
         '@type': 'ImageObject',
         url: `${siteMetadata.siteUrl}/HyreLogLogoLight.png`,
+        width: 120,
+        height: 40,
       },
+      url: siteMetadata.siteUrl,
     },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': post.canonicalUrl || `${siteMetadata.siteUrl}/blog/${post.slug}`,
+    },
+    articleSection: post.categories.join(', '),
+    keywords: post.tags?.join(', ') || post.categories.join(', '),
+    wordCount: post.content.split(/\s+/).length,
+    timeRequired: `PT${post.readingTimeMinutes || 5}M`,
+    inLanguage: 'en-US',
+    isAccessibleForFree: true,
+    ...(post.categories.length > 0 && {
+      about: post.categories.map((category) => ({
+        '@type': 'Thing',
+        name: category,
+      })),
+    }),
   };
 
   return (
@@ -142,23 +188,31 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               {/* Header */}
               <header className="mb-8">
                 <div className="mb-4 flex flex-wrap gap-2">
-                  {post.categories.map((category) => (
-                    <Link
-                      key={category}
-                      href={`/blog/categories/${encodeURIComponent(category.toLowerCase())}`}
-                      className="rounded-full bg-gray-100 px-4 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-                    >
-                      {category}
-                    </Link>
-                  ))}
+                  {post.categories.map((category) => {
+                    const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
+                    return (
+                      <Link
+                        key={category}
+                        href={`/blog/categories/${categorySlug}`}
+                        className="rounded-full bg-gray-100 px-4 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                      >
+                        {category}
+                      </Link>
+                    );
+                  })}
                 </div>
                 <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl">
                   {post.title}
                 </h1>
+                {post.subtitle && (
+                  <p className="mb-4 text-2xl font-medium text-gray-700 dark:text-gray-300">
+                    {post.subtitle}
+                  </p>
+                )}
                 <p className="mb-6 text-xl text-gray-600 dark:text-gray-400">
                   {post.description}
                 </p>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-500">
+                <div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-500">
                   <span>{post.author}</span>
                   <span>•</span>
                   <time dateTime={post.date}>
@@ -168,16 +222,40 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       day: 'numeric',
                     })}
                   </time>
+                  {post.updatedAt && (
+                    <>
+                      <span>•</span>
+                      <time dateTime={post.updatedAt}>
+                        Updated {new Date(post.updatedAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </time>
+                    </>
+                  )}
                   <span>•</span>
                   <span>{post.readingTime}</span>
                 </div>
+                {post.tags && post.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </header>
 
               {/* Featured Image */}
               <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                 <Image
                   src={post.ogImage}
-                  alt={post.title}
+                  alt={post.ogImageAlt || post.title}
                   fill
                   className="object-cover"
                   priority
@@ -196,6 +274,40 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <ArticleTOC content={mdxData.content} />
             </aside>
           </div>
+
+          {/* CTA Section */}
+          <section className="mt-16 rounded-lg border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-8 dark:border-gray-800 dark:from-gray-900 dark:to-gray-800">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
+                Ready to solve your audit trail challenges?
+              </h2>
+              <p className="mb-6 text-lg text-gray-600 dark:text-gray-400">
+                HyreLog provides production-grade audit trails with cryptographic integrity,
+                comprehensive compliance support, and developer-friendly APIs. Stop relying on
+                ad-hoc logs and fragile exports—get an immutable source of truth for your
+                security and compliance needs.
+              </p>
+              <Link
+                href="/#early-access"
+                className="inline-flex items-center justify-center rounded-lg bg-gray-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
+              >
+                Join the Early Access Waitlist
+                <svg
+                  className="ml-2 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </Link>
+            </div>
+          </section>
 
           {/* Related Posts */}
           {relatedPosts.length > 0 && (

@@ -8,15 +8,23 @@ import { visit } from 'unist-util-visit';
 
 export interface BlogPost {
   title: string;
+  subtitle?: string;
   description: string;
   date: string;
+  updatedAt?: string;
   author: string;
+  authorUrl?: string;
   categories: string[];
+  tags?: string[];
   readingTime: string;
+  readingTimeMinutes?: number;
   slug: string;
   content: string;
   ogImage: string;
+  ogImageAlt?: string;
+  canonicalUrl?: string;
   excerpt?: string;
+  draft?: boolean;
 }
 
 const blogDirectory = path.join(process.cwd(), 'content', 'blog');
@@ -67,27 +75,39 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
 
   // Calculate reading time
   const readingTimeResult = readingTime(content);
-  const readingTimeStr = `${Math.ceil(readingTimeResult.minutes)} min read`;
+  const readingTimeMinutes = Math.ceil(readingTimeResult.minutes);
+  const readingTimeStr = `${readingTimeMinutes} min read`;
 
   // Extract plain text for search
   const plainText = await extractPlainText(content);
 
+  // Filter out draft posts unless explicitly requested
+  const isDraft = (data.draft as boolean) ?? false;
+
   return {
     title: (data.title as string) || '',
+    subtitle: data.subtitle as string | undefined,
     description: (data.description as string) || '',
     date: (data.date as string) || new Date().toISOString().split('T')[0],
+    updatedAt: data.updatedAt as string | undefined,
     author: (data.author as string) || 'Mark Rosenberg',
+    authorUrl: data.authorUrl as string | undefined,
     categories: (data.categories as string[]) || [],
+    tags: (data.tags as string[]) || [],
     readingTime: readingTimeStr,
+    readingTimeMinutes,
     slug: postSlug,
     content: plainText, // Store plain text for search
     ogImage: (data.ogImage as string) || `/og/blog-${postSlug}.png`,
+    ogImageAlt: data.ogImageAlt as string | undefined,
+    canonicalUrl: data.canonicalUrl as string | undefined,
     excerpt: data.excerpt as string | undefined,
+    draft: isDraft,
   };
 }
 
 // Get all blog posts
-export async function getAllBlogPosts(): Promise<BlogPost[]> {
+export async function getAllBlogPosts(includeDrafts: boolean = false): Promise<BlogPost[]> {
   const slugs = getAllBlogSlugs();
   const posts = await Promise.all(
     slugs.map(async (slug) => {
@@ -97,7 +117,11 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
   );
 
   return posts
-    .filter((post): post is BlogPost => post !== null)
+    .filter((post): post is BlogPost => {
+      if (post === null) return false;
+      if (!includeDrafts && post.draft) return false;
+      return true;
+    })
     .sort((a, b) => {
       const dateA = new Date(a.date).getTime();
       const dateB = new Date(b.date).getTime();
