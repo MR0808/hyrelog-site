@@ -439,14 +439,33 @@ export default function Home() {
                         description:
                             'HyreLog is an immutable, hash-chained audit trail API that captures structured events from SaaS platforms and enterprise systems. Built for SOC 2, ISO 27001, and GDPR-aligned compliance.',
                         brand: {
-                            '@id': `${siteMetadata.siteUrl}/#organization`
+                            '@type': 'Brand',
+                            name: 'HyreLog',
+                            logo: {
+                                '@type': 'ImageObject',
+                                url: `${siteMetadata.siteUrl}/HyreLogLogoLight.png`,
+                                width: 1200,
+                                height: 400,
+                            },
                         },
-                        logo: `${siteMetadata.siteUrl}/HyreLogLogoLight.png`,
-                        image: `${siteMetadata.siteUrl}/HyreLogLogoLight.png`,
+                        image: [
+                            {
+                                '@type': 'ImageObject',
+                                url: `${siteMetadata.siteUrl}/HyreLogLogoLight.png`,
+                                width: 1200,
+                                height: 400,
+                                alt: 'HyreLog Logo',
+                            },
+                        ],
+                        logo: {
+                            '@type': 'ImageObject',
+                            url: `${siteMetadata.siteUrl}/HyreLogLogoLight.png`,
+                            width: 1200,
+                            height: 400,
+                        },
                         audience: {
                             '@type': 'Audience',
-                            audienceType:
-                                'Developers, SaaS Companies, Platform Engineering Teams, Security & Compliance Teams'
+                            audienceType: 'Developers, SaaS Companies, Platform Engineering Teams, Security & Compliance Teams',
                         },
                         offers: {
                             '@type': 'Offer',
@@ -454,13 +473,8 @@ export default function Home() {
                             price: '0',
                             priceCurrency: 'USD',
                             availability: 'https://schema.org/PreOrder',
-                            category: 'Software'
+                            category: 'Software',
                         },
-                        aggregateRating: {
-                            '@type': 'AggregateRating',
-                            ratingValue: '5',
-                            reviewCount: '0'
-                        }
                     })
                 }}
             />
