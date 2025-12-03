@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 
 interface BlogFiltersProps {
   categories: string[];
@@ -9,8 +8,6 @@ interface BlogFiltersProps {
 }
 
 export function BlogFilters({ categories, selectedCategory }: BlogFiltersProps) {
-  const searchParams = useSearchParams();
-
   return (
     <div className="space-y-4">
       <h3 className="text-sm font-semibold text-gray-900 dark:text-white">

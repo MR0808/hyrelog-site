@@ -4,25 +4,17 @@ import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Container } from '@/components/Container';
 import { BlogPost } from '@/lib/blog';
+import { BlogSearch } from '@/components/blog/BlogSearch';
+import { BlogSort } from '@/components/blog/BlogSort';
+import { BlogViewToggle } from '@/components/blog/BlogViewToggle';
+import { BlogFilters } from '@/components/blog/BlogFilters';
 
-// Dynamically import blog components to reduce initial bundle size
+// Dynamically import heavier components to reduce initial bundle size
 const BlogCard = dynamic(
   () => import('@/components/blog/BlogCard').then((mod) => ({ default: mod.BlogCard }))
 );
 const BlogListItem = dynamic(
   () => import('@/components/blog/BlogListItem').then((mod) => ({ default: mod.BlogListItem }))
-);
-const BlogSearch = dynamic(
-  () => import('@/components/blog/BlogSearch').then((mod) => ({ default: mod.BlogSearch }))
-);
-const BlogFilters = dynamic(
-  () => import('@/components/blog/BlogFilters').then((mod) => ({ default: mod.BlogFilters }))
-);
-const BlogSort = dynamic(
-  () => import('@/components/blog/BlogSort').then((mod) => ({ default: mod.BlogSort }))
-);
-const BlogViewToggle = dynamic(
-  () => import('@/components/blog/BlogViewToggle').then((mod) => ({ default: mod.BlogViewToggle }))
 );
 const BlogPagination = dynamic(
   () => import('@/components/blog/BlogPagination').then((mod) => ({ default: mod.BlogPagination }))
@@ -45,13 +37,20 @@ export function BlogIndexClient({ initialPosts, categories }: BlogIndexClientPro
 
     // Search filter
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (post) =>
-          post.title.toLowerCase().includes(query) ||
-          post.description.toLowerCase().includes(query) ||
-          post.content.toLowerCase().includes(query)
-      );
+      const query = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter((post) => {
+        const titleMatch = post.title?.toLowerCase().includes(query) || false;
+        const descriptionMatch = post.description?.toLowerCase().includes(query) || false;
+        const contentMatch = post.content?.toLowerCase().includes(query) || false;
+        const categoryMatch = post.categories?.some((cat) =>
+          cat.toLowerCase().includes(query)
+        ) || false;
+        const tagMatch = post.tags?.some((tag) =>
+          tag.toLowerCase().includes(query)
+        ) || false;
+        
+        return titleMatch || descriptionMatch || contentMatch || categoryMatch || tagMatch;
+      });
     }
 
     // Sort
