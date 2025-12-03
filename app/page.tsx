@@ -454,7 +454,7 @@ export default function Home() {
                                 url: `${siteMetadata.siteUrl}/HyreLogLogoLight.png`,
                                 width: 1200,
                                 height: 400,
-                                alt: 'HyreLog Logo',
+                                name: 'HyreLog Logo',
                             },
                         ],
                         logo: {
