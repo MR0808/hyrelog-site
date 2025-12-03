@@ -69,7 +69,7 @@ export default function RootLayout({
                 ></script>
             </head>
             <body
-                className={`${inter.variable} min-h-screen bg-white font-sans antialiased dark:bg-gradient-to-b dark:from-gray-950 dark:to-gray-900 dark:text-gray-100`}
+                className={`${inter.variable} min-h-screen bg-white font-sans antialiased dark:bg-linear-to-b dark:from-gray-950 dark:to-gray-900 dark:text-gray-100`}
                 suppressHydrationWarning
             >
                 <ThemeProvider>

@@ -35,21 +35,14 @@ export function BlogIndexClient({ initialPosts, categories }: BlogIndexClientPro
   const filteredAndSortedPosts = useMemo(() => {
     let filtered = initialPosts;
 
-    // Search filter
+    // Search filter - only search title and description
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
       filtered = filtered.filter((post) => {
         const titleMatch = post.title?.toLowerCase().includes(query) || false;
         const descriptionMatch = post.description?.toLowerCase().includes(query) || false;
-        const contentMatch = post.content?.toLowerCase().includes(query) || false;
-        const categoryMatch = post.categories?.some((cat) =>
-          cat.toLowerCase().includes(query)
-        ) || false;
-        const tagMatch = post.tags?.some((tag) =>
-          tag.toLowerCase().includes(query)
-        ) || false;
         
-        return titleMatch || descriptionMatch || contentMatch || categoryMatch || tagMatch;
+        return titleMatch || descriptionMatch;
       });
     }
 
@@ -121,6 +114,20 @@ export function BlogIndexClient({ initialPosts, categories }: BlogIndexClientPro
               Showing {paginatedPosts.length} of {filteredAndSortedPosts.length} posts
             </div>
 
+            {/* Top Pagination */}
+            {filteredAndSortedPosts.length > 0 && (
+              <div className="mb-6">
+                <BlogPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  pageSize={pageSize}
+                  onPageSizeChange={setPageSize}
+                  totalPosts={filteredAndSortedPosts.length}
+                />
+              </div>
+            )}
+
             {/* Blog Posts */}
             {paginatedPosts.length === 0 ? (
               <div className="py-12 text-center">
@@ -145,7 +152,7 @@ export function BlogIndexClient({ initialPosts, categories }: BlogIndexClientPro
                 )}
 
                 {/* Pagination */}
-                {totalPages > 1 && (
+                {filteredAndSortedPosts.length > 0 && (
                   <BlogPagination
                     currentPage={currentPage}
                     totalPages={totalPages}

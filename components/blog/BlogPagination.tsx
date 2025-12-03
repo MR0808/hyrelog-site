@@ -1,5 +1,7 @@
 'use client';
 
+import { useRef } from 'react';
+
 interface BlogPaginationProps {
   currentPage: number;
   totalPages: number;
@@ -17,7 +19,14 @@ export function BlogPagination({
   onPageSizeChange,
   totalPosts,
 }: BlogPaginationProps) {
-  const pageSizeOptions = [10, 20, 50, totalPosts];
+  const selectRef = useRef<HTMLSelectElement>(null);
+  
+  // Create page size options in the order: 10, 20, 50, All
+  const standardSizes = [10, 20, 50];
+  const pageSizeOptions = [
+    ...standardSizes,
+    ...(standardSizes.includes(totalPosts) ? [] : [totalPosts]),
+  ];
 
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
@@ -61,68 +70,85 @@ export function BlogPagination({
           Show:
         </label>
         <select
+          ref={selectRef}
           id="pageSize"
           value={pageSize === totalPosts ? 'all' : pageSize}
           onChange={(e) => {
             const value = e.target.value;
-            onPageSizeChange(value === 'all' ? totalPosts : parseInt(value, 10));
+            const newSize = value === 'all' ? totalPosts : parseInt(value, 10);
+            onPageSizeChange(newSize);
+            // Maintain focus on the select element after change
+            setTimeout(() => {
+              selectRef.current?.focus();
+            }, 0);
+          }}
+          onBlur={(e) => {
+            // Prevent blur if clicking within the select area
+            const relatedTarget = e.relatedTarget as HTMLElement;
+            if (relatedTarget && selectRef.current?.contains(relatedTarget)) {
+              e.preventDefault();
+              selectRef.current?.focus();
+            }
           }}
           className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:focus:border-gray-600 dark:focus:ring-gray-600"
         >
-          {pageSizeOptions.map((size) => (
-            <option key={size} value={size === totalPosts ? 'all' : size}>
+          {pageSizeOptions.map((size, index) => (
+            <option key={`page-size-${size}-${index}`} value={size === totalPosts ? 'all' : size}>
               {size === totalPosts ? 'All' : size}
             </option>
           ))}
         </select>
       </div>
 
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800"
-        >
-          Previous
-        </button>
+      {/* Only show page navigation buttons when there are multiple pages */}
+      {totalPages > 1 && (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800"
+          >
+            Previous
+          </button>
 
-        <div className="flex items-center gap-1">
-          {getPageNumbers().map((page, index) => {
-            if (page === 'ellipsis') {
+          <div className="flex items-center gap-1">
+            {getPageNumbers().map((page, index) => {
+              if (page === 'ellipsis') {
+                return (
+                  <span
+                    key={`ellipsis-${index}`}
+                    className="px-2 text-gray-500 dark:text-gray-400"
+                  >
+                    ...
+                  </span>
+                );
+              }
+
               return (
-                <span
-                  key={`ellipsis-${index}`}
-                  className="px-2 text-gray-500 dark:text-gray-400"
+                <button
+                  key={page}
+                  onClick={() => onPageChange(page as number)}
+                  className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${
+                    currentPage === page
+                      ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
+                      : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800'
+                  }`}
                 >
-                  ...
-                </span>
+                  {page}
+                </button>
               );
-            }
+            })}
+          </div>
 
-            return (
-              <button
-                key={page}
-                onClick={() => onPageChange(page as number)}
-                className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${
-                  currentPage === page
-                    ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
-                    : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800'
-                }`}
-              >
-                {page}
-              </button>
-            );
-          })}
+          <button
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800"
+          >
+            Next
+          </button>
         </div>
-
-        <button
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800"
-        >
-          Next
-        </button>
-      </div>
+      )}
     </div>
   );
 }
