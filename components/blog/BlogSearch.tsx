@@ -11,7 +11,7 @@ interface BlogSearchProps {
 
 export function BlogSearch({ value, onChange, resultsCount }: BlogSearchProps) {
   const previousValueRef = useRef(value);
-  const debounceTimerRef = useRef<NodeJS.Timeout>();
+  const debounceTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
     // Clear previous timer
