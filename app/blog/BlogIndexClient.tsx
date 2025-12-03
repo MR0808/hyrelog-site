@@ -101,7 +101,11 @@ export function BlogIndexClient({ initialPosts, categories }: BlogIndexClientPro
             {/* Search and Sort Bar */}
             <div className="mb-6">
               <div className="mb-4">
-                <BlogSearch value={searchQuery} onChange={setSearchQuery} />
+                <BlogSearch
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  resultsCount={filteredAndSortedPosts.length}
+                />
               </div>
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <BlogSort value={sortBy} onChange={setSortBy} />

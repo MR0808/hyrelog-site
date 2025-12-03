@@ -39,7 +39,7 @@ export function BlogListItem({ post }: BlogListItemProps) {
             <button
               key={category}
               onClick={(e) => handleCategoryClick(e, category)}
-              className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              className="cursor-pointer rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               {category}
             </button>

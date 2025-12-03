@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Container } from '@/components/Container';
 import { Section } from '@/components/Section';
 import { SiteStructuredData } from '@/components/SiteStructuredData';
+import { TrackedLink } from '@/components/TrackedLink';
 import { siteMetadata } from '@/lib/siteMetadata';
 
 export const metadata: Metadata = {
@@ -587,9 +588,11 @@ export default function AboutPage() {
                                 Join our early access program and help us build
                                 the audit trail platform you need.
                             </p>
-                            <Link
+                            <TrackedLink
                                 href="/#early-access"
                                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-8 py-4 text-base font-medium text-white transition-all hover:bg-gray-800 hover:shadow-lg dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
+                                eventName="Join the early access list"
+                                location="About Page CTA"
                             >
                                 Join the early access list
                                 <svg
@@ -605,7 +608,7 @@ export default function AboutPage() {
                                         d="M13 7l5 5m0 0l-5 5m5-5H6"
                                     />
                                 </svg>
-                            </Link>
+                            </TrackedLink>
                         </div>
                     </div>
                 </Container>

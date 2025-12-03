@@ -9,7 +9,7 @@ export function FaqItem({ question, answer }: { question: string; answer: string
     <div className="border-b border-gray-200 px-6 dark:border-gray-800">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between py-4 text-left"
+        className="cursor-pointer flex w-full items-center justify-between py-4 text-left"
         aria-expanded={isOpen}
       >
         <span className="pr-4 font-medium text-gray-900 dark:text-gray-100">

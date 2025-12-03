@@ -106,7 +106,7 @@ export function ArticleTOC({ content }: ArticleTOCProps) {
             <button
               key={`${heading.id}-${index}`}
               onClick={() => handleClick(heading.id)}
-              className={`block w-full text-left text-sm transition-colors ${
+              className={`cursor-pointer block w-full text-left text-sm transition-colors ${
                 heading.level === 1
                   ? 'pl-0 font-medium'
                   : heading.level === 2

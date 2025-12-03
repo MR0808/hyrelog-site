@@ -10,7 +10,7 @@ export function BlogViewToggle({ view, onChange }: BlogViewToggleProps) {
     <div className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white p-1 dark:border-gray-700 dark:bg-gray-900">
       <button
         onClick={() => onChange('grid')}
-        className={`rounded px-3 py-1.5 text-sm transition-colors ${
+        className={`cursor-pointer rounded px-3 py-1.5 text-sm transition-colors ${
           view === 'grid'
             ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
             : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
@@ -33,7 +33,7 @@ export function BlogViewToggle({ view, onChange }: BlogViewToggleProps) {
       </button>
       <button
         onClick={() => onChange('list')}
-        className={`rounded px-3 py-1.5 text-sm transition-colors ${
+        className={`cursor-pointer rounded px-3 py-1.5 text-sm transition-colors ${
           view === 'list'
             ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
             : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'

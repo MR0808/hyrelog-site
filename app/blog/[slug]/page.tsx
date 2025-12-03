@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import type { Metadata } from 'next';
 import { Container } from '@/components/Container';
 import { BlogCard } from '@/components/blog/BlogCard';
+import { BlogPostViewTracker } from '@/components/BlogPostViewTracker';
 
 // Dynamically import heavy components to reduce initial bundle size
 const MDXRenderer = dynamic(
@@ -148,6 +149,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <>
+      <BlogPostViewTracker slug={post.slug} title={post.title} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

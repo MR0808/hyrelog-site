@@ -6,6 +6,7 @@ import { FeatureCard } from '@/components/FeatureCard';
 import { FaqItem } from '@/components/FaqItem';
 import { EarlyAccessForm } from '@/components/EarlyAccessForm';
 import { SiteStructuredData } from '@/components/SiteStructuredData';
+import { TrackedLink } from '@/components/TrackedLink';
 import { siteMetadata } from '@/lib/siteMetadata';
 
 export const metadata: Metadata = {
@@ -128,18 +129,22 @@ export default function Home() {
                                 exports, use an immutable source of truth.
                             </p>
                             <div className="flex flex-col gap-4 sm:flex-row">
-                                <a
+                                <TrackedLink
                                     href="#early-access"
                                     className="inline-flex items-center justify-center rounded-lg bg-gray-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
+                                    eventName="Join Early Access"
+                                    location="Hero Section"
                                 >
                                     Join Early Access
-                                </a>
-                                <a
+                                </TrackedLink>
+                                <TrackedLink
                                     href="#roadmap"
                                     className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-6 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
+                                    eventName="View Roadmap"
+                                    location="Hero Section"
                                 >
                                     View Roadmap
-                                </a>
+                                </TrackedLink>
                             </div>
                         </div>
                         <div className="hidden lg:block">

@@ -4,6 +4,8 @@ import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { GoogleAnalytics } from '@/components/GoogleAnalytics';
+import { CookieConsent } from '@/components/CookieConsent';
 import { siteMetadata } from '@/lib/siteMetadata';
 
 const inter = Inter({
@@ -62,6 +64,8 @@ export default function RootLayout({
                 {/* Preconnect to external domains for faster loading */}
                 <link rel="preconnect" href="https://cloud.umami.is" />
                 <link rel="dns-prefetch" href="https://cloud.umami.is" />
+                <link rel="preconnect" href="https://www.googletagmanager.com" />
+                <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
                 <script
                     defer
                     src="https://cloud.umami.is/script.js"
@@ -73,6 +77,8 @@ export default function RootLayout({
                 suppressHydrationWarning
             >
                 <ThemeProvider>
+                    <GoogleAnalytics />
+                    <CookieConsent />
                     <div className="flex min-h-screen flex-col bg-white dark:bg-gray-950">
                         <Header />
                         <main className="flex-1">{children}</main>

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { submitEarlyAccess, type EarlyAccessFormData } from "@/app/actions/early-access";
+import { analytics } from "@/lib/analytics";
 
 const earlyAccessSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -39,9 +40,15 @@ export function EarlyAccessForm() {
         throw new Error(result.error || "Something went wrong. Please try again.");
       }
 
+      // Track successful form submission
+      analytics.trackFormSubmit('Early Access Form', true);
+      analytics.trackEarlyAccessSignup();
+
       setIsSuccess(true);
       reset();
     } catch (err) {
+      // Track failed form submission
+      analytics.trackFormSubmit('Early Access Form', false);
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -140,7 +147,7 @@ export function EarlyAccessForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full rounded-lg bg-gray-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:opacity-50 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
+        className="cursor-pointer w-full rounded-lg bg-gray-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
       >
         {isSubmitting ? "Submitting..." : "Join Early Access"}
       </button>

@@ -106,7 +106,7 @@ export function BlogPagination({
           <button
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800"
+            className="cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800"
           >
             Previous
           </button>
@@ -128,7 +128,7 @@ export function BlogPagination({
                 <button
                   key={page}
                   onClick={() => onPageChange(page as number)}
-                  className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${
+                  className={`cursor-pointer rounded-lg px-3 py-1.5 text-sm transition-colors ${
                     currentPage === page
                       ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
                       : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800'
@@ -143,7 +143,7 @@ export function BlogPagination({
           <button
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800"
+            className="cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800"
           >
             Next
           </button>

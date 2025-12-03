@@ -1,11 +1,40 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+import { analytics } from '@/lib/analytics';
+
 interface BlogSearchProps {
   value: string;
   onChange: (value: string) => void;
+  resultsCount?: number;
 }
 
-export function BlogSearch({ value, onChange }: BlogSearchProps) {
+export function BlogSearch({ value, onChange, resultsCount }: BlogSearchProps) {
+  const previousValueRef = useRef(value);
+  const debounceTimerRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    // Clear previous timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Track search after user stops typing (debounce)
+    if (value && value !== previousValueRef.current && value.length > 2) {
+      debounceTimerRef.current = setTimeout(() => {
+        analytics.trackSearch(value, resultsCount || 0);
+      }, 1000);
+    }
+
+    previousValueRef.current = value;
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [value, resultsCount]);
+
   return (
     <div className="relative">
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
