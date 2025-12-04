@@ -431,27 +431,22 @@ export default function Home() {
             {/* Site Structured Data (Organization, WebSite, Navigation, Breadcrumbs) */}
             <SiteStructuredData currentPath="/" />
 
-            {/* Product Structured Data */}
+            {/* SoftwareApplication Structured Data */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify({
                         '@context': 'https://schema.org',
-                        '@type': 'Product',
-                        '@id': `${siteMetadata.siteUrl}/#product`,
-                        name: 'HyreLog — Audit Trail API',
+                        '@type': 'SoftwareApplication',
+                        '@id': `${siteMetadata.siteUrl}/#software`,
+                        name: 'HyreLog',
+                        applicationCategory: 'DeveloperApplication',
+                        operatingSystem: 'Web',
                         url: siteMetadata.siteUrl,
                         description:
                             'HyreLog is an immutable, hash-chained audit trail API that captures structured events from SaaS platforms and enterprise systems. Built for SOC 2, ISO 27001, and GDPR-aligned compliance.',
-                        brand: {
-                            '@type': 'Brand',
-                            name: 'HyreLog',
-                            logo: {
-                                '@type': 'ImageObject',
-                                url: `${siteMetadata.siteUrl}/HyreLogLogoLight.png`,
-                                width: 1200,
-                                height: 400,
-                            },
+                        publisher: {
+                            '@id': `${siteMetadata.siteUrl}/#organization`
                         },
                         image: [
                             {
@@ -459,27 +454,35 @@ export default function Home() {
                                 url: `${siteMetadata.siteUrl}/HyreLogLogoLight.png`,
                                 width: 1200,
                                 height: 400,
-                                name: 'HyreLog Logo',
-                            },
+                                name: 'HyreLog Logo'
+                            }
                         ],
                         logo: {
                             '@type': 'ImageObject',
                             url: `${siteMetadata.siteUrl}/HyreLogLogoLight.png`,
                             width: 1200,
-                            height: 400,
+                            height: 400
                         },
                         audience: {
                             '@type': 'Audience',
-                            audienceType: 'Developers, SaaS Companies, Platform Engineering Teams, Security & Compliance Teams',
+                            audienceType:
+                                'Developers, SaaS Companies, Platform Engineering Teams, Security & Compliance Teams'
                         },
                         offers: {
                             '@type': 'Offer',
                             url: siteMetadata.siteUrl,
                             price: '0',
                             priceCurrency: 'USD',
-                            availability: 'https://schema.org/PreOrder',
-                            category: 'Software',
+                            availability: 'https://schema.org/PreOrder'
                         },
+                        featureList: [
+                            'Immutable hash-chained audit logs',
+                            'REST API for event ingestion',
+                            'SOC 2 and ISO 27001 compliance support',
+                            'GDPR-aligned data handling',
+                            'Multi-tenant SaaS architecture',
+                            'Regional data storage'
+                        ]
                     })
                 }}
             />
