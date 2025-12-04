@@ -465,15 +465,7 @@ export default function Home() {
                         },
                         audience: {
                             '@type': 'Audience',
-                            audienceType:
-                                'Developers, SaaS Companies, Platform Engineering Teams, Security & Compliance Teams'
-                        },
-                        offers: {
-                            '@type': 'Offer',
-                            url: siteMetadata.siteUrl,
-                            price: '0',
-                            priceCurrency: 'USD',
-                            availability: 'https://schema.org/PreOrder'
+                            audienceType: 'Developers'
                         },
                         featureList: [
                             'Immutable hash-chained audit logs',
@@ -482,7 +474,10 @@ export default function Home() {
                             'GDPR-aligned data handling',
                             'Multi-tenant SaaS architecture',
                             'Regional data storage'
-                        ]
+                        ],
+                        softwareVersion: '1.0.0',
+                        releaseNotes:
+                            'Early access - Production-grade audit trail API for modern SaaS platforms'
                     })
                 }}
             />
