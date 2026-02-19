@@ -31,7 +31,13 @@ export function buildMetadata(config: SeoConfig): Metadata {
     title,
     description,
     robots: config.noIndex ? { index: false, follow: false } : undefined,
-    alternates: { canonical: { url: canonical } },
+    alternates: {
+      canonical: { url: canonical },
+      languages: {
+        "en-US": canonical,
+        "x-default": canonical,
+      },
+    },
     openGraph: {
       title: config.openGraph?.title ?? title,
       description: config.openGraph?.description ?? description,
@@ -104,6 +110,44 @@ export function blogPostingJsonLd(params: {
       name: SITE_NAME,
       logo: { "@type": "ImageObject", url: `${SITE_URL}/brand/hyrelog-logo-dark.png` },
     },
+  };
+}
+
+export function webPageJsonLd(params: {
+  title: string;
+  description?: string;
+  path?: string;
+}) {
+  const url = params.path ? `${SITE_URL}${params.path}` : SITE_URL;
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: params.title,
+    description: params.description ?? DEFAULT_DESCRIPTION,
+    url,
+    isPartOf: {
+      "@type": "WebSite",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+  };
+}
+
+export function breadcrumbJsonLd(
+  items: Array<{
+    name: string;
+    path?: string;
+  }>
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: `${SITE_URL}${item.path ?? ""}`,
+    })),
   };
 }
 

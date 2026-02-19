@@ -3,7 +3,8 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Pricing",
@@ -60,10 +61,22 @@ const tiers = [
 ];
 
 export default function PricingPage() {
+  const webPageLd = webPageJsonLd({
+    title: "Pricing",
+    description:
+      "HyreLog pricing plans for compliance-grade audit logging with immutable trails and region-aware controls.",
+    path: "/pricing",
+  });
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Pricing", path: "/pricing" },
+  ]);
+
   return (
     <div>
+      <JsonLd data={[webPageLd, breadcrumbLd]} />
       <section className="border-b py-16 md:py-20">
-        <div className="container px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Pricing</h1>
             <p className="mt-4 text-lg text-muted-foreground">
@@ -75,8 +88,8 @@ export default function PricingPage() {
       </section>
 
       <section className="py-16 md:py-20">
-        <div className="container px-4 md:px-6">
-          <div className="grid gap-8 md:grid-cols-3">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-3">
             {tiers.map((tier) => (
               <Card
                 key={tier.name}
@@ -116,7 +129,7 @@ export default function PricingPage() {
       </section>
 
       <section className="border-t bg-muted/30 py-16 md:py-20">
-        <div className="container px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-2xl font-semibold">Usage-based pricing</h2>
             <p className="mt-4 text-muted-foreground">

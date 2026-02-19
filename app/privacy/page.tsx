@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Privacy Policy",
@@ -9,9 +10,20 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function PrivacyPage() {
+  const webPageLd = webPageJsonLd({
+    title: "Privacy Policy",
+    description: "Privacy policy for HyreLog.",
+    path: "/privacy",
+  });
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Privacy Policy", path: "/privacy" },
+  ]);
+
   return (
     <div className="py-16 md:py-20">
-      <div className="container px-4 md:px-6">
+      <JsonLd data={[webPageLd, breadcrumbLd]} />
+      <div className="container mx-auto px-4 md:px-6">
         <div className="mx-auto max-w-3xl">
           <h1 className="text-3xl font-bold tracking-tight">Privacy Policy</h1>
           <p className="mt-4 text-muted-foreground">

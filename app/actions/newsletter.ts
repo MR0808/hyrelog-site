@@ -9,7 +9,6 @@ import { getClientIp } from "@/lib/security/ip";
 import { getUserAgent } from "@/lib/security/ua";
 import { sendNewsletterConfirmEmail } from "@/lib/email/resend";
 import { generateToken, hashToken } from "@/lib/crypto/tokens";
-import { prisma } from "@/lib/db";
 import { fieldErrorsFromZod, firstErrorMessage } from "@/lib/zod-error";
 
 const SITE_URL = process.env.SITE_URL ?? "http://localhost:3000";
@@ -29,6 +28,7 @@ export async function subscribeNewsletter(
   formData: FormData
 ): Promise<{ ok: boolean; message: string }> {
   try {
+    const { prisma } = await import("@/lib/db");
     await rateLimitOrThrow("newsletter_subscribe");
     validateHoneypot(formData);
 
@@ -113,6 +113,7 @@ const ConfirmSchema = z.object({ token: z.string().min(1, { error: "Invalid link
 export async function confirmNewsletter(
   token: string
 ): Promise<{ ok: boolean; message: string }> {
+  const { prisma } = await import("@/lib/db");
   const parsed = ConfirmSchema.safeParse({ token });
   if (!parsed.success) return { ok: false, message: "Invalid or expired link." };
 

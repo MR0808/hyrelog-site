@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { NewsletterForm } from "@/components/marketing/newsletter-form";
+import { Logo } from "@/components/marketing/logo";
 
 const footerLinks = {
   product: [
@@ -22,12 +23,10 @@ const footerLinks = {
 export function SiteFooter() {
   return (
     <footer className="border-t bg-muted/30">
-      <div className="container px-4 py-12 md:px-6">
+      <div className="container mx-auto px-4 py-12 md:px-6">
         <div className="grid gap-8 md:grid-cols-4">
           <div className="md:col-span-2">
-            <Link href="/" className="font-semibold text-lg">
-              HyreLog
-            </Link>
+            <Logo href="/" size="sm" />
             <p className="mt-2 text-sm text-muted-foreground max-w-sm">
               Compliance-grade audit logging. Immutable trails, multi-region residency, auditor-ready exports.
             </p>
@@ -38,7 +37,7 @@ export function SiteFooter() {
           </div>
           <div>
             <h4 className="font-medium text-sm">Product</h4>
-            <ul className="mt-3 space-y-2">
+            <ul aria-label="Footer product links" className="mt-3 space-y-2">
               {footerLinks.product.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground">
@@ -50,7 +49,7 @@ export function SiteFooter() {
           </div>
           <div>
             <h4 className="font-medium text-sm">Resources & Legal</h4>
-            <ul className="mt-3 space-y-2">
+            <ul aria-label="Footer resources and legal links" className="mt-3 space-y-2">
               {footerLinks.resources.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground">

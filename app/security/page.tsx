@@ -7,7 +7,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Security & Compliance",
@@ -40,11 +41,23 @@ const faqs = [
 ];
 
 export default function SecurityPage() {
+  const webPageLd = webPageJsonLd({
+    title: "Security & Compliance",
+    description:
+      "How HyreLog delivers tamper-evident audit logs, regional residency controls, and auditor-ready exports.",
+    path: "/security",
+  });
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Security & Compliance", path: "/security" },
+  ]);
+
   return (
     <div>
+      <JsonLd data={[webPageLd, breadcrumbLd]} />
       <section className="border-b py-16 md:py-20">
-        <div className="container px-4 md:px-6">
-          <div className="mx-auto max-w-3xl">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
               Security & compliance
             </h1>
@@ -58,54 +71,63 @@ export default function SecurityPage() {
       </section>
 
       <section className="border-b bg-muted/30 py-16 md:py-20">
-        <div className="container px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-2xl font-semibold">Hash-chain immutability</h2>
-          <p className="mt-4 text-muted-foreground max-w-3xl">
+          <p className="mt-4 text-muted-foreground">
             Every event is hashed and linked to the previous one. This creates a chain where
             altering any entry would invalidate all subsequent hashes. Auditors (or your own
             tooling) can verify the chain by recomputing hashes and comparing. We never allow
             in-place edits or undeclared deletions — so the trail is provably tamper-evident.
           </p>
+          </div>
         </div>
       </section>
 
       <section className="border-b py-16 md:py-20">
-        <div className="container px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-2xl font-semibold">Data residency</h2>
-          <p className="mt-4 text-muted-foreground max-w-3xl">
+          <p className="mt-4 text-muted-foreground">
             You choose the region for each log stream. Data is processed and stored only in that
             region, supporting GDPR and other data residency requirements. No cross-region
             replication of audit data unless you explicitly configure it.
           </p>
+          </div>
         </div>
       </section>
 
       <section className="border-b bg-muted/30 py-16 md:py-20">
-        <div className="container px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-2xl font-semibold">Access controls & retention</h2>
-          <p className="mt-4 text-muted-foreground max-w-3xl">
+          <p className="mt-4 text-muted-foreground">
             Role-based access control (RBAC) determines who can read, search, and export logs.
             Access to the audit log is itself logged. Retention is configurable per stream — hot
             storage for recent querying and optional long-term archive for compliance.
           </p>
+          </div>
         </div>
       </section>
 
       <section className="border-b py-16 md:py-20">
-        <div className="container px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-2xl font-semibold">Exports for auditors</h2>
-          <p className="mt-4 text-muted-foreground max-w-3xl">
+          <p className="mt-4 text-muted-foreground">
             Export in CSV, JSON, or packaged evidence bundles. Exports include timestamps and
             hashes so auditors can verify integrity. Designed to be dropped into security
             reviews and compliance submissions without extra work.
           </p>
+          </div>
         </div>
       </section>
 
       <section className="border-b bg-muted/30 py-16 md:py-20">
-        <div className="container px-4 md:px-6">
-          <h2 className="text-2xl font-semibold">FAQ</h2>
-          <Accordion type="single" collapsible className="mt-6 max-w-3xl">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mx-auto max-w-3xl">
+          <h2 className="text-center text-2xl font-semibold">FAQ</h2>
+          <Accordion type="single" collapsible className="mt-6">
             {faqs.map((faq) => (
               <AccordionItem key={faq.q} value={faq.q}>
                 <AccordionTrigger>{faq.q}</AccordionTrigger>
@@ -113,11 +135,12 @@ export default function SecurityPage() {
               </AccordionItem>
             ))}
           </Accordion>
+          </div>
         </div>
       </section>
 
       <section className="py-16 md:py-20">
-        <div className="container px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="mx-auto max-w-xl text-center">
             <p className="text-sm text-muted-foreground">
               We support SOC 2, GDPR, and ISO-aligned environments. HyreLog is designed to give

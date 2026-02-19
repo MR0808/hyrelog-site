@@ -5,6 +5,7 @@ import { SITE_URL } from "@/lib/seo";
 const STATIC_PATHS = [
   "",
   "/product",
+  "/about",
   "/security",
   "/pricing",
   "/blog",
@@ -15,12 +16,10 @@ const STATIC_PATHS = [
   "/compare/datadog",
   "/compare/cloudwatch",
   "/resources/soc2-audit-trail-checklist",
-  "/resources/download",
-  "/newsletter/confirm",
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const blogSlugs = getBlogSlugs();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const blogSlugs = await getBlogSlugs();
   const blogEntries = blogSlugs.map((slug) => ({
     url: `${SITE_URL}/blog/${slug}`,
     lastModified: new Date(),

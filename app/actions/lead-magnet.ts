@@ -9,7 +9,6 @@ import { getClientIp } from "@/lib/security/ip";
 import { getUserAgent } from "@/lib/security/ua";
 import { sendLeadMagnetEmail } from "@/lib/email/resend";
 import { generateToken, hashToken } from "@/lib/crypto/tokens";
-import { prisma } from "@/lib/db";
 import { fieldErrorsFromZod, firstErrorMessage } from "@/lib/zod-error";
 
 const SITE_URL = process.env.SITE_URL ?? "http://localhost:3000";
@@ -31,6 +30,7 @@ export async function requestLeadMagnet(
   formData: FormData
 ): Promise<{ ok: boolean; message: string }> {
   try {
+    const { prisma } = await import("@/lib/db");
     await rateLimitOrThrow("lead_magnet_request");
     validateHoneypot(formData);
 
@@ -116,6 +116,7 @@ const RedeemSchema = z.object({ token: z.string().min(1) });
 export async function redeemLeadMagnet(
   token: string
 ): Promise<{ ok: boolean; message: string; downloadPath?: string }> {
+  const { prisma } = await import("@/lib/db");
   const parsed = RedeemSchema.safeParse({ token });
   if (!parsed.success) return { ok: false, message: "Invalid or expired link." };
 

@@ -8,7 +8,6 @@ import { verifyTurnstile } from "@/lib/security/turnstile";
 import { getClientIp } from "@/lib/security/ip";
 import { getUserAgent } from "@/lib/security/ua";
 import { sendContactEmail, sendAutoReply } from "@/lib/email/resend";
-import { prisma } from "@/lib/db";
 import { fieldErrorsFromZod, firstErrorMessage } from "@/lib/zod-error";
 
 const ContactSchema = z.object({
@@ -37,6 +36,7 @@ export async function submitContact(
   formData: FormData
 ): Promise<{ ok: boolean; message: string }> {
   try {
+    const { prisma } = await import("@/lib/db");
     await rateLimitOrThrow("contact");
     validateHoneypot(formData);
 

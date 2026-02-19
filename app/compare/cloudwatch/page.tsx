@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Cloud Logging vs Audit Logging",
@@ -11,9 +12,21 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function CompareCloudWatchPage() {
+  const webPageLd = webPageJsonLd({
+    title: "Cloud Logging vs Audit Logging",
+    description:
+      "How cloud-native logs differ from compliance-grade, tamper-evident audit trails with residency guarantees.",
+    path: "/compare/cloudwatch",
+  });
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Cloud Logging vs Audit Logging", path: "/compare/cloudwatch" },
+  ]);
+
   return (
     <div className="py-16 md:py-20">
-      <div className="container px-4 md:px-6">
+      <JsonLd data={[webPageLd, breadcrumbLd]} />
+      <div className="container mx-auto px-4 md:px-6">
         <div className="mx-auto max-w-3xl">
           <h1 className="text-3xl font-bold tracking-tight">
             Cloud logging vs compliance-grade audit logging

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Terms of Service",
@@ -9,9 +10,20 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function TermsPage() {
+  const webPageLd = webPageJsonLd({
+    title: "Terms of Service",
+    description: "Terms of service for HyreLog.",
+    path: "/terms",
+  });
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Terms of Service", path: "/terms" },
+  ]);
+
   return (
     <div className="py-16 md:py-20">
-      <div className="container px-4 md:px-6">
+      <JsonLd data={[webPageLd, breadcrumbLd]} />
+      <div className="container mx-auto px-4 md:px-6">
         <div className="mx-auto max-w-3xl">
           <h1 className="text-3xl font-bold tracking-tight">Terms of Service</h1>
           <p className="mt-4 text-muted-foreground">

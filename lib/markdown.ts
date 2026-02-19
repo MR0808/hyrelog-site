@@ -25,6 +25,13 @@ export function markdownToHtml(md: string): string {
       continue;
     }
 
+    // h1
+    if (trimmed.startsWith("# ")) {
+      out.push(`<h1>${escapeHtml(trimmed.slice(2))}</h1>`);
+      i++;
+      continue;
+    }
+
     // h2
     if (trimmed.startsWith("## ")) {
       out.push(`<h2>${escapeHtml(trimmed.slice(3))}</h2>`);
@@ -57,6 +64,9 @@ export function markdownToHtml(md: string): string {
     }
     if (paraLines.length > 0) {
       out.push("<p>" + inlineMarkdown(paraLines.join(" ")) + "</p>");
+    } else {
+      // Safety fallback for unsupported markdown lines to avoid infinite loops.
+      i++;
     }
   }
 

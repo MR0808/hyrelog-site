@@ -3,7 +3,8 @@ import Link from "next/link";
 import { Shield, Globe, FileCheck, Lock, Zap, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Product",
@@ -52,11 +53,23 @@ const features = [
 ];
 
 export default function ProductPage() {
+  const webPageLd = webPageJsonLd({
+    title: "Product",
+    description:
+      "HyreLog product overview: immutable audit logging, multi-region residency, retention, and auditor-ready exports.",
+    path: "/product",
+  });
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Product", path: "/product" },
+  ]);
+
   return (
     <div>
+      <JsonLd data={[webPageLd, breadcrumbLd]} />
       <section className="border-b py-16 md:py-20">
-        <div className="container px-4 md:px-6">
-          <div className="mx-auto max-w-3xl">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
               Compliance-grade audit logging, built for scale
             </h1>
@@ -65,7 +78,7 @@ export default function ProductPage() {
               auditor-ready exports — so you can pass security reviews without building and
               maintaining your own hash-chain infrastructure.
             </p>
-            <div className="mt-8">
+            <div className="mt-8 flex justify-center">
               <Button asChild>
                 <Link href="/contact?ref=book-demo">Book a demo</Link>
               </Button>
@@ -75,9 +88,9 @@ export default function ProductPage() {
       </section>
 
       <section className="border-b bg-muted/30 py-16 md:py-20">
-        <div className="container px-4 md:px-6">
-          <h2 className="text-2xl font-semibold">Features</h2>
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
+        <div className="container mx-auto px-4 md:px-6">
+          <h2 className="text-center text-2xl font-semibold">Features</h2>
+          <div className="mx-auto mt-8 grid max-w-5xl gap-6 md:grid-cols-2">
             {features.map((f) => (
               <Card key={f.title}>
                 <CardHeader>
@@ -96,9 +109,10 @@ export default function ProductPage() {
       </section>
 
       <section className="border-b py-16 md:py-20">
-        <div className="container px-4 md:px-6">
-          <h2 className="text-2xl font-semibold">Why not observability tools?</h2>
-          <p className="mt-2 text-muted-foreground">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-2xl font-semibold">Why not observability tools?</h2>
+            <p className="mt-2 text-muted-foreground">
             Datadog, CloudWatch, and other observability platforms are great for metrics and
             debugging. But enterprise security reviews and compliance frameworks often require
             something different: <strong>audit logging</strong> with provable immutability and
@@ -136,11 +150,12 @@ export default function ProductPage() {
               for articles on audit logging vs observability.
             </p>
           </div>
+          </div>
         </div>
       </section>
 
       <section className="py-16 md:py-20">
-        <div className="container px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="mx-auto max-w-xl text-center">
             <h2 className="text-2xl font-semibold">Ready to get started?</h2>
             <p className="mt-2 text-muted-foreground">

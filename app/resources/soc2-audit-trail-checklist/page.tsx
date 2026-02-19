@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { requestLeadMagnet } from "@/app/actions/lead-magnet";
 import { LeadMagnetForm } from "./lead-magnet-form";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "SOC 2 Audit Trail Checklist",
@@ -14,9 +14,21 @@ export const metadata: Metadata = buildMetadata({
 const MAGNET = "soc2-audit-trail-checklist";
 
 export default function Soc2ChecklistPage() {
+  const webPageLd = webPageJsonLd({
+    title: "SOC 2 Audit Trail Checklist",
+    description:
+      "Download the SOC 2 audit trail checklist for security reviews and compliance readiness.",
+    path: "/resources/soc2-audit-trail-checklist",
+  });
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "SOC 2 Audit Trail Checklist", path: "/resources/soc2-audit-trail-checklist" },
+  ]);
+
   return (
     <div className="py-16 md:py-20">
-      <div className="container px-4 md:px-6">
+      <JsonLd data={[webPageLd, breadcrumbLd]} />
+      <div className="container mx-auto px-4 md:px-6">
         <div className="mx-auto max-w-xl">
           <h1 className="text-3xl font-bold tracking-tight">
             SOC 2 Audit Trail Checklist

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ContactForm } from "@/components/marketing/contact-form";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Contact",
@@ -11,10 +12,22 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function ContactPage() {
+  const webPageLd = webPageJsonLd({
+    title: "Contact",
+    description:
+      "Get in touch with HyreLog about compliance-grade audit logging, demos, and implementation questions.",
+    path: "/contact",
+  });
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Contact", path: "/contact" },
+  ]);
+
   return (
     <div>
+      <JsonLd data={[webPageLd, breadcrumbLd]} />
       <section className="border-b py-16 md:py-20">
-        <div className="container px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="mx-auto max-w-xl">
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Contact us</h1>
             <p className="mt-4 text-muted-foreground">

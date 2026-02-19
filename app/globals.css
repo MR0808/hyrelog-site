@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* Design tokens: background, foreground, card, accent (primary), muted, ring */
 :root {
   --background: hsl(0 0% 100%);
   --foreground: hsl(0 0% 3.9%);
@@ -7,8 +8,8 @@
   --card-foreground: hsl(0 0% 3.9%);
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(0 0% 3.9%);
-  --primary: hsl(0 0% 9%);
-  --primary-foreground: hsl(0 0% 98%);
+  --primary: hsl(173 58% 39%);
+  --primary-foreground: hsl(0 0% 100%);
   --secondary: hsl(0 0% 96.1%);
   --secondary-foreground: hsl(0 0% 9%);
   --muted: hsl(0 0% 96.1%);
@@ -19,30 +20,30 @@
   --destructive-foreground: hsl(0 0% 98%);
   --border: hsl(0 0% 89.8%);
   --input: hsl(0 0% 89.8%);
-  --ring: hsl(0 0% 3.9%);
+  --ring: hsl(173 58% 39%);
   --radius: 0.625rem;
 }
 
 .dark {
-  --background: hsl(0 0% 3.9%);
+  --background: hsl(222 14% 6%);
   --foreground: hsl(0 0% 98%);
-  --card: hsl(0 0% 3.9%);
+  --card: hsl(222 14% 8%);
   --card-foreground: hsl(0 0% 98%);
-  --popover: hsl(0 0% 3.9%);
+  --popover: hsl(222 14% 8%);
   --popover-foreground: hsl(0 0% 98%);
-  --primary: hsl(0 0% 98%);
-  --primary-foreground: hsl(0 0% 9%);
-  --secondary: hsl(0 0% 14.9%);
+  --primary: hsl(173 58% 42%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(222 14% 14%);
   --secondary-foreground: hsl(0 0% 98%);
-  --muted: hsl(0 0% 14.9%);
+  --muted: hsl(222 14% 14%);
   --muted-foreground: hsl(0 0% 63.9%);
-  --accent: hsl(0 0% 14.9%);
+  --accent: hsl(222 14% 14%);
   --accent-foreground: hsl(0 0% 98%);
   --destructive: hsl(0 62.8% 30.6%);
   --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(0 0% 14.9%);
-  --input: hsl(0 0% 14.9%);
-  --ring: hsl(0 0% 83.1%);
+  --border: hsl(222 14% 18%);
+  --input: hsl(222 14% 18%);
+  --ring: hsl(173 58% 42%);
 }
 
 @theme inline {
@@ -75,10 +76,15 @@
   border-color: var(--border);
 }
 
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-feature-settings: "rlig" 1, "calt" 1;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Focus visible ring */
@@ -114,4 +120,58 @@ body {
 .prose code { font-size: 0.9em; }
 .prose pre code { background: none; padding: 0; }
 .prose blockquote { border-left: 4px solid var(--border); padding-left: 1em; margin: 1em 0; color: var(--muted-foreground); }
+
+/* Premium background utilities */
+.bg-premium {
+  background: linear-gradient(
+    180deg,
+    var(--background) 0%,
+    color-mix(in oklch, var(--primary) 4%, var(--background)) 50%,
+    var(--background) 100%
+  );
+}
+.dark .bg-premium {
+  background: linear-gradient(
+    180deg,
+    var(--background) 0%,
+    color-mix(in oklch, var(--primary) 8%, var(--background)) 40%,
+    color-mix(in oklch, var(--primary) 3%, var(--background)) 70%,
+    var(--background) 100%
+  );
+}
+
+.bg-grid {
+  position: relative;
+}
+.bg-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
+  opacity: 0.35;
+  pointer-events: none;
+}
+.dark .bg-grid::before {
+  opacity: 0.12;
+}
+
+/* Lightweight noise: small base64 pattern used as mask overlay */
+.bg-noise {
+  position: relative;
+}
+.bg-noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+.dark .bg-noise::after {
+  opacity: 0.06;
+}
 

@@ -8,6 +8,7 @@ export const metadata: Metadata = buildMetadata({
   title: "Download resource",
   description: "Download your HyreLog resource.",
   path: "/resources/download",
+  noIndex: true,
 });
 
 interface PageProps {
@@ -22,7 +23,7 @@ export default async function ResourceDownloadPage({ searchParams }: PageProps) 
 
   return (
     <div className="py-16 md:py-20">
-      <div className="container px-4 md:px-6">
+      <div className="container mx-auto px-4 md:px-6">
         <div className="mx-auto max-w-md text-center">
           {result.ok && result.downloadPath ? (
             <>

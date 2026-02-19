@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Observability vs Audit Logging",
@@ -11,9 +12,21 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function CompareDatadogPage() {
+  const webPageLd = webPageJsonLd({
+    title: "Observability vs Audit Logging",
+    description:
+      "When observability tooling is enough and when a dedicated, tamper-evident audit trail is required.",
+    path: "/compare/datadog",
+  });
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Observability vs Audit Logging", path: "/compare/datadog" },
+  ]);
+
   return (
     <div className="py-16 md:py-20">
-      <div className="container px-4 md:px-6">
+      <JsonLd data={[webPageLd, breadcrumbLd]} />
+      <div className="container mx-auto px-4 md:px-6">
         <div className="mx-auto max-w-3xl">
           <h1 className="text-3xl font-bold tracking-tight">
             Observability vs audit logging: what’s the difference?
