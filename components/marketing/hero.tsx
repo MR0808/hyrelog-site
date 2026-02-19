@@ -22,10 +22,10 @@ export function Hero() {
             </p>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
               <Button asChild size="lg" className="text-base">
-                <Link href="/book-demo">Book a demo</Link>
+                <Link href="/waitlist">Join the waitlist</Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="text-base">
-                <Link href="/security">See security</Link>
+                <Link href="/contact">Contact for details</Link>
               </Button>
             </div>
             <p className="mt-8 text-sm text-muted-foreground">

@@ -80,7 +80,7 @@ export default function ProductPage() {
             </p>
             <div className="mt-8 flex justify-center">
               <Button asChild>
-                <Link href="/contact?ref=book-demo">Book a demo</Link>
+                <Link href="/waitlist">Join the waitlist</Link>
               </Button>
             </div>
           </div>
@@ -162,7 +162,7 @@ export default function ProductPage() {
               See how HyreLog fits your compliance and residency requirements.
             </p>
             <Button asChild className="mt-6">
-              <Link href="/contact?ref=book-demo">Book a demo</Link>
+              <Link href="/waitlist">Join the waitlist</Link>
             </Button>
           </div>
         </div>

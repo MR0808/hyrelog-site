@@ -121,8 +121,8 @@ export default function AboutPage() {
                   talk to us
                 </Link>
                 , or{" "}
-                <Link href="/book-demo" className="underline underline-offset-4">
-                  book a demo
+                <Link href="/waitlist" className="underline underline-offset-4">
+                  join the waitlist
                 </Link>
                 .
               </p>

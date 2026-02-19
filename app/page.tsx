@@ -248,13 +248,13 @@ export default function HomePage() {
             </ul>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Button asChild size="lg">
-                <Link href="/book-demo">
-                  Book a demo
+                <Link href="/waitlist">
+                  Join the waitlist
                   <ArrowRight className="ml-2 size-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="/security">Read security</Link>
+                <Link href="/contact">Contact for details</Link>
               </Button>
             </div>
           </div>

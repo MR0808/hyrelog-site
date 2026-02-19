@@ -13,6 +13,7 @@ const navLinks = [
   { href: "/security", label: "Security" },
   { href: "/pricing", label: "Pricing" },
   { href: "/blog", label: "Blog" },
+  { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -38,8 +39,14 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
+          <Link
+            href="/contact"
+            className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-foreground md:inline-flex"
+          >
+            Contact for details
+          </Link>
           <Button asChild size="sm" className="hidden md:inline-flex">
-            <Link href="/book-demo">Book a demo</Link>
+            <Link href="/waitlist">Join the waitlist</Link>
           </Button>
           <Button
             variant="ghost"
@@ -71,11 +78,18 @@ export function SiteHeader() {
             <div className="mt-2 flex items-center gap-2">
               <ThemeToggle />
               <Button asChild className="flex-1">
-                <Link href="/book-demo" onClick={() => setOpen(false)}>
-                  Book a demo
+                <Link href="/waitlist" onClick={() => setOpen(false)}>
+                  Join the waitlist
                 </Link>
               </Button>
             </div>
+            <Link
+              href="/contact"
+              onClick={() => setOpen(false)}
+              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
+            >
+              Contact for details
+            </Link>
           </nav>
         </div>
       )}

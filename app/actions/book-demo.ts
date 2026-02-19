@@ -89,7 +89,7 @@ export async function submitBookDemoLead(
     if (!res.ok)
       return { ok: false, message: res.error ?? "Failed to submit. Please try again." };
 
-    return { ok: true, message: "Thanks! We'll be in touch to schedule your demo." };
+    return { ok: true, message: "Thanks! We'll share waitlist and launch updates soon." };
   } catch (e) {
     if (e instanceof Error) return { ok: false, message: e.message };
     return { ok: false, message: "Something went wrong. Please try again." };

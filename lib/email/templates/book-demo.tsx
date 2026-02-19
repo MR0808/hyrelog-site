@@ -29,10 +29,10 @@ export function BookDemoEmail({
   return (
     <Html lang="en">
       <Head />
-      <Preview>Book demo: {name}</Preview>
+      <Preview>Waitlist request: {name}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Book demo request</Heading>
+          <Heading style={h1}>Waitlist request</Heading>
           <Section style={section}>
             <Text style={label}>Name</Text>
             <Text style={value}>{name}</Text>
@@ -63,7 +63,7 @@ export function BookDemoEmail({
             </>
           ) : null}
           <Hr style={hr} />
-          <Text style={footer}>— HyreLog book demo form</Text>
+          <Text style={footer}>- HyreLog waitlist form</Text>
         </Container>
       </Body>
     </Html>

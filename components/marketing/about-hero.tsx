@@ -26,13 +26,13 @@ export function AboutHero() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg">
-                <Link href="/book-demo">
-                  Book a demo
+                <Link href="/waitlist">
+                  Join the waitlist
                   <ArrowRight className="ml-2 size-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="/security">See Security</Link>
+                <Link href="/contact">Contact for details</Link>
               </Button>
             </div>
             <p className="mt-5 text-sm text-muted-foreground">

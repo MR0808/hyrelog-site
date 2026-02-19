@@ -2,13 +2,14 @@
 
 import { useActionState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { submitWaitlist } from "@/app/actions/waitlist";
+import { TurnstileWidget } from "@/components/forms/turnstile-widget";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { TurnstileWidget } from "@/components/forms/turnstile-widget";
-import { submitBookDemoLead } from "@/app/actions/book-demo";
+import { trackEvent } from "@/lib/analytics";
 
-function FormInner({
+function WaitlistFormInner({
   state,
   pending,
 }: {
@@ -17,47 +18,53 @@ function FormInner({
 }) {
   return (
     <>
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <label htmlFor="bd-name" className="text-sm font-medium">
-            Name *
+          <label htmlFor="waitlist-email" className="text-sm font-medium">
+            Work email *
           </label>
-          <Input id="bd-name" name="name" required placeholder="Jane Smith" />
+          <Input
+            id="waitlist-email"
+            type="email"
+            name="email"
+            required
+            placeholder="you@company.com"
+          />
         </div>
         <div className="space-y-2">
-          <label htmlFor="bd-email" className="text-sm font-medium">
-            Email *
+          <label htmlFor="waitlist-name" className="text-sm font-medium">
+            Name
           </label>
-          <Input id="bd-email" name="email" type="email" required placeholder="jane@company.com" />
+          <Input id="waitlist-name" name="name" placeholder="Jane Smith" />
         </div>
       </div>
       <div className="space-y-2">
-        <label htmlFor="bd-company" className="text-sm font-medium">
+        <label htmlFor="waitlist-company" className="text-sm font-medium">
           Company
         </label>
-        <Input id="bd-company" name="company" placeholder="Acme Inc." />
+        <Input id="waitlist-company" name="company" placeholder="Acme Inc." />
       </div>
       <div className="space-y-2">
-        <label htmlFor="bd-message" className="text-sm font-medium">
-          Message (optional)
+        <label htmlFor="waitlist-message" className="text-sm font-medium">
+          Notes (optional)
         </label>
         <Textarea
-          id="bd-message"
+          id="waitlist-message"
           name="message"
           rows={3}
-          placeholder="What are you looking to solve?"
+          placeholder="Anything we should know about your audit logging needs?"
         />
       </div>
       <div className="flex items-center gap-2">
         <input
           type="checkbox"
-          id="bd-consent"
+          id="waitlist-consent"
           name="consent"
           value="on"
           className="rounded border-input"
         />
-        <label htmlFor="bd-consent" className="text-sm text-muted-foreground">
-          I agree to be contacted about HyreLog.
+        <label htmlFor="waitlist-consent" className="text-sm text-muted-foreground">
+          I agree to receive launch updates and pricing changes (optional).
         </label>
       </div>
       <TurnstileWidget />
@@ -78,28 +85,30 @@ function FormInner({
   );
 }
 
-export function BookDemoForm() {
+export function WaitlistForm() {
   const pathname = usePathname();
   const [state, formAction, isPending] = useActionState(
     async (_prev: { ok: boolean; message: string } | null, formData: FormData) => {
-      return submitBookDemoLead(formData);
+      return submitWaitlist(formData);
     },
     null
   );
 
   useEffect(() => {
-    if (state?.ok && typeof window.turnstile?.reset === "function") {
-      window.turnstile.reset();
+    if (state?.ok) {
+      trackEvent("waitlist_submit_success", { page: pathname ?? "/waitlist" });
+      if (typeof window.turnstile?.reset === "function") window.turnstile.reset();
     }
-  }, [state?.ok]);
+  }, [state?.ok, pathname]);
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="mt-8 space-y-6">
       <div className="absolute -left-[9999px] top-0 opacity-0" aria-hidden>
-        <input name="website" type="text" tabIndex={-1} autoComplete="off" />
+        <label htmlFor="waitlist-website">Website</label>
+        <input id="waitlist-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
       <input type="hidden" name="pagePath" value={pathname ?? ""} />
-      <FormInner state={state} pending={isPending} />
+      <WaitlistFormInner state={state} pending={isPending} />
     </form>
   );
 }

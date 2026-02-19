@@ -7,7 +7,7 @@ import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Contact",
   description:
-    "Get in touch with HyreLog. Book a demo or ask about compliance-grade audit logging, immutable audit trails, and multi-region data residency.",
+    "Get in touch with HyreLog. Join the waitlist or ask about compliance-grade audit logging, immutable audit trails, and multi-region data residency.",
   path: "/contact",
 });
 
@@ -31,7 +31,7 @@ export default function ContactPage() {
           <div className="mx-auto max-w-xl">
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Contact us</h1>
             <p className="mt-4 text-muted-foreground">
-              Book a demo or ask about audit logging for your stack. We’ll get back to you
+              Contact us for details on audit logging for your stack. We&apos;ll get back to you
               quickly.
             </p>
             <Suspense fallback={<div className="mt-8 h-64 animate-pulse rounded-md bg-muted" />}>

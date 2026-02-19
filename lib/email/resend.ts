@@ -6,6 +6,7 @@ import { ContactAutoReplyEmail } from "./templates/contact-auto-reply";
 import { NewsletterConfirmEmail } from "./templates/newsletter-confirm";
 import { LeadMagnetEmail } from "./templates/lead-magnet";
 import { BookDemoEmail } from "./templates/book-demo";
+import { WaitlistThanksEmail } from "./templates/waitlist-thanks";
 
 const client = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const FROM = process.env.CONTACT_FROM_EMAIL ?? "HyreLog <onboarding@resend.dev>";
@@ -127,7 +128,23 @@ export async function sendBookDemoLeadEmail(payload: {
     from: FROM,
     to,
     replyTo: payload.email,
-    subject: `Book demo request: ${payload.name} (${payload.company ?? "—"})`,
+    subject: `Waitlist request: ${payload.name} (${payload.company ?? "—"})`,
+    html,
+  });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
+export async function sendWaitlistThanksEmail(payload: {
+  email: string;
+  name?: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  if (!client) return { ok: false, error: "Email service not configured." };
+  const html = await render(React.createElement(WaitlistThanksEmail, { name: payload.name }));
+  const { error } = await client.emails.send({
+    from: FROM,
+    to: payload.email,
+    subject: "You're on the HyreLog waitlist",
     html,
   });
   if (error) return { ok: false, error: error.message };

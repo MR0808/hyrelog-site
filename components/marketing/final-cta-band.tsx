@@ -19,16 +19,16 @@ export function FinalCtaBand() {
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button asChild size="lg">
-              <Link href="/book-demo">
-                Book a demo
+              <Link href="/waitlist">
+                Join the waitlist
                 <ArrowRight className="ml-2 size-4" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="/security">Read security</Link>
+              <Link href="/contact">Contact for details</Link>
             </Button>
             <Button asChild variant="ghost" size="lg">
-              <Link href="/contact">Contact</Link>
+              <Link href="/security">Read security</Link>
             </Button>
           </div>
         </div>

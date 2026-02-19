@@ -10,9 +10,9 @@ const footerLinks = {
   ],
   resources: [
     { href: "/blog", label: "Blog" },
-    { href: "/book-demo", label: "Book a demo" },
+    { href: "/waitlist", label: "Join the waitlist" },
     { href: "/resources/soc2-audit-trail-checklist", label: "SOC 2 Checklist" },
-    { href: "/contact", label: "Contact" },
+    { href: "/contact", label: "Contact for details" },
   ],
   legal: [
     { href: "/terms", label: "Terms" },

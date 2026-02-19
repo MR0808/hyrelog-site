@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { TurnstileWidget } from "@/components/forms/turnstile-widget";
 import { submitContact } from "@/app/actions/contact";
+import { trackEvent } from "@/lib/analytics";
 
 function ContactFormInner({
   state,
@@ -89,10 +90,13 @@ export function ContactForm() {
   );
 
   useEffect(() => {
-    if (state?.ok && typeof window.turnstile?.reset === "function") {
-      window.turnstile.reset();
+    if (state?.ok) {
+      trackEvent("contact_submit_success", { page: pathname ?? "/contact" });
+      if (typeof window.turnstile?.reset === "function") {
+        window.turnstile.reset();
+      }
     }
-  }, [state?.ok]);
+  }, [state?.ok, pathname]);
 
   return (
     <form action={formAction} className="mt-8 space-y-6">

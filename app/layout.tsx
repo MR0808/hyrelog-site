@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
+import { GoogleAnalytics } from "@/components/analytics/ga";
 import { buildMetadata, organizationJsonLd, softwareApplicationJsonLd } from "@/lib/seo";
 import "./globals.css";
 
@@ -68,6 +69,7 @@ export default function RootLayout({
             <SiteFooter />
           </div>
         </ThemeProvider>
+        <GoogleAnalytics />
       </body>
     </html>
   );

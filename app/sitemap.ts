@@ -10,7 +10,7 @@ const STATIC_PATHS = [
   "/pricing",
   "/blog",
   "/contact",
-  "/book-demo",
+  "/waitlist",
   "/terms",
   "/privacy",
   "/compare/datadog",
