@@ -79,11 +79,50 @@ Add or edit Markdown/MDX files; no CMS. Rebuild or rely on dev server to pick up
 
 ## SEO
 
-- **Metadata**: Each route sets `title`, `description`, canonical URL, Open Graph, and Twitter tags via `lib/seo.ts` and `generateMetadata` where applicable.
-- **Sitemap**: `/sitemap.xml` (dynamic, includes blog slugs).
-- **Robots**: `/robots.txt` (allow all, disallow `/api/`, link to sitemap).
-- **JSON-LD**: Organization and SoftwareApplication on the root layout; BlogPosting on each blog post.
-- **OG image**: Default is `SITE_URL/og-default.png`. Add a static image at `public/og-default.png` or implement a dynamic OG route if you prefer.
+- **Metadata**: Centralized in `lib/seo/` with shared `buildMetadata()` and per-route usage.
+- **Sitemap**: `/sitemap.xml` includes static routes + blog + solutions pages.
+- **Robots**: `/robots.txt` allows indexing in production and can force noindex on previews with `NEXT_PUBLIC_NO_INDEX=true`.
+- **JSON-LD**: Organization (layout), SoftwareApplication (product), BlogPosting (blog post), Breadcrumb (subpages), FAQPage (solutions).
+- **Assets**: Required icon/OG/marketing assets are listed in `public/SEO_ASSETS_REQUIRED.md`.
+
+## SEO Setup You Must Do
+
+### A) Domain + site URL
+
+- Set `SITE_URL` to your production domain, e.g. `https://hyrelog.com`.
+- Confirm all canonical URLs use this value (no localhost in production).
+
+### B) Google Search Console
+
+- Add a **Domain property** for your root domain.
+- Verify ownership via DNS.
+- Submit sitemap: `https://hyrelog.com/sitemap.xml`.
+- Request indexing for key routes (`/`, `/product`, `/security`, `/pricing`, `/blog`, `/solutions`).
+
+### C) GA4 (optional)
+
+- Create a GA4 property and measurement ID.
+- Set `NEXT_PUBLIC_GA_MEASUREMENT_ID`.
+- Verify realtime events after deploy (waitlist/contact/pricing CTA events).
+
+### D) Social profiles for schema
+
+- Add LinkedIn/X/GitHub URLs to Organization `sameAs` in `lib/seo/jsonld.ts` when final accounts are ready.
+
+### E) Robots + indexing sanity
+
+- Keep production indexable.
+- Keep preview/staging non-indexable by setting `NEXT_PUBLIC_NO_INDEX=true` on preview environments.
+
+### F) OG and marketing images
+
+- Replace all placeholders and missing assets listed in `public/SEO_ASSETS_REQUIRED.md`.
+- Required OG size is `1200x630`.
+- Ensure branding consistency (logo lockup, typography, and contrast).
+
+### G) Verification
+
+- Follow `SEO_CHECKLIST.md` to validate metadata, structured data, sitemap, robots, status codes, and performance before go-live.
 
 ## Project structure (high level)
 

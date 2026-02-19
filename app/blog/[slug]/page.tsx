@@ -22,17 +22,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = getPostBySlug(slug);
   if (!post) return { title: "Post not found" };
   const f = post.frontmatter;
+  const image = f.ogImage
+    ? f.ogImage.startsWith("http")
+      ? f.ogImage
+      : `${SITE_URL}${f.ogImage}`
+    : "/og/blog.png";
+
   return buildMetadata({
     title: f.title,
     description: f.description,
     path: `/blog/${slug}`,
     canonical: f.canonicalUrl,
-    openGraph: {
-      type: "article",
-      publishedTime: f.date,
-      authors: f.author ? [f.author] : undefined,
-      images: f.ogImage ? [(f.ogImage.startsWith("http") ? f.ogImage : `${SITE_URL}${f.ogImage}`)] : undefined,
-    },
+    image,
+    openGraphType: "article",
+    publishedTime: f.date,
+    authors: f.author ? [f.author] : undefined,
   });
 }
 
@@ -50,6 +54,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     datePublished: f.date,
     dateModified: f.updatedAt ?? f.date,
     author: f.author,
+    image: f.ogImage ? (f.ogImage.startsWith("http") ? f.ogImage : `${SITE_URL}${f.ogImage}`) : `${SITE_URL}/og/blog.png`,
   });
   const webPageLd = webPageJsonLd({
     title: f.title,

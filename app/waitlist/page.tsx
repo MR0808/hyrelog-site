@@ -5,10 +5,11 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Join the waitlist",
+  title: "Waitlist — Get Early Access to HyreLog",
   description:
-    "Join the HyreLog waitlist for early access and launch updates on compliance-grade audit logging.",
+    "Join the HyreLog waitlist for early access and launch updates. Be ready for your next enterprise security review.",
   path: "/waitlist",
+  image: "/og/waitlist.png",
 });
 
 export default function WaitlistPage() {

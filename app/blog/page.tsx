@@ -6,10 +6,11 @@ import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 import { BlogListingClient } from "@/components/marketing/blog-listing-client";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Blog",
+  title: "Blog — Audit Logging, Security Reviews, and Data Residency",
   description:
-    "Articles on audit logging, SOC 2, GDPR, tamper-evident trails, data residency, and compliance for modern SaaS.",
+    "Guides on immutable audit logs, SOC2 audit trails, enterprise security reviews, and building compliance-ready SaaS.",
   path: "/blog",
+  image: "/og/blog.png",
 });
 
 /** Pre-rendered at build for instant load; use NEXT_PRIVATE_STATIC_WORKERS=1 if build hangs */

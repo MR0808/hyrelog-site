@@ -5,10 +5,11 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Contact",
+  title: "Contact — Talk to HyreLog",
   description:
-    "Get in touch with HyreLog. Join the waitlist or ask about compliance-grade audit logging, immutable audit trails, and multi-region data residency.",
+    "Contact HyreLog for pricing details, residency options, and enterprise security review questions.",
   path: "/contact",
+  image: "/og/default.png",
 });
 
 export default function ContactPage() {

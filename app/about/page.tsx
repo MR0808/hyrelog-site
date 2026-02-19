@@ -10,41 +10,19 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { SITE_URL, SITE_NAME, breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, buildMetadata, organizationJsonLd, webPageJsonLd } from "@/lib/seo";
 
 const ABOUT_PATH = "/about";
-const ABOUT_TITLE = "About HyreLog — Why we built immutable audit logging";
+const ABOUT_TITLE = "About — Why We Built HyreLog";
 const ABOUT_DESCRIPTION =
-  "Learn why HyreLog was built: compliance-grade immutable audit logging, tamper-evident trails, data residency controls, and infrastructure designed for enterprise security reviews.";
-const ABOUT_URL = `${SITE_URL}${ABOUT_PATH}`;
-const OG_IMAGE = `${SITE_URL}/og-default.png`;
+  "HyreLog was built to make audit trails provable: tamper-evident integrity, residency controls, and exports for enterprise reviews.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: ABOUT_TITLE,
   description: ABOUT_DESCRIPTION,
-  alternates: {
-    canonical: ABOUT_URL,
-    languages: {
-      "en-US": ABOUT_URL,
-      "x-default": ABOUT_URL,
-    },
-  },
-  openGraph: {
-    title: ABOUT_TITLE,
-    description: ABOUT_DESCRIPTION,
-    url: ABOUT_URL,
-    siteName: SITE_NAME,
-    type: "website",
-    locale: "en_US",
-    images: [OG_IMAGE],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: ABOUT_TITLE,
-    description: ABOUT_DESCRIPTION,
-    images: [OG_IMAGE],
-  },
-};
+  path: ABOUT_PATH,
+  image: "/og/about.png",
+});
 
 const whatWeDo = [
   {
@@ -65,14 +43,7 @@ const whatWeDo = [
 ];
 
 export default function AboutPage() {
-  const orgLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: SITE_NAME,
-    url: SITE_URL,
-    logo: `${SITE_URL}/brand/hyrelog-logo-dark.png`,
-    sameAs: [] as string[],
-  };
+  const orgLd = organizationJsonLd();
   const webPageLd = webPageJsonLd({
     title: ABOUT_TITLE,
     description: ABOUT_DESCRIPTION,

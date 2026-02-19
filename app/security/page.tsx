@@ -11,10 +11,11 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Security & Compliance",
+  title: "Security — Tamper-Evident Logs, Residency, and Exports",
   description:
-    "How HyreLog achieves tamper-evident audit logs with hash chains, multi-region data residency, access controls, retention, and auditor-ready exports. Supports SOC 2, GDPR, and ISO-aligned environments.",
+    "HyreLog supports SOC2-aligned environments with integrity proofs, access controls, retention policies, and auditor-ready exports.",
   path: "/security",
+  image: "/og/security.png",
 });
 
 const faqs = [

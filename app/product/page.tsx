@@ -4,13 +4,14 @@ import { Shield, Globe, FileCheck, Lock, Zap, AlertTriangle } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { JsonLd } from "@/components/seo/json-ld";
-import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, buildMetadata, softwareAppJsonLd, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Product",
+  title: "Product — Audit Logging Built for Compliance",
   description:
-    "HyreLog product overview: immutable audit logging, multi-region data residency, retention, exports, and why observability tools are not enough for compliance-grade audit trails.",
+    "Capture, protect, and prove critical actions with tamper-evident audit logs, search, exports, and residency controls.",
   path: "/product",
+  image: "/og/security.png",
 });
 
 const features = [
@@ -63,10 +64,14 @@ export default function ProductPage() {
     { name: "Home", path: "/" },
     { name: "Product", path: "/product" },
   ]);
+  const softwareLd = softwareAppJsonLd({
+    description:
+      "Capture, protect, and prove critical actions with tamper-evident audit logs, search, exports, and residency controls.",
+  });
 
   return (
     <div>
-      <JsonLd data={[webPageLd, breadcrumbLd]} />
+      <JsonLd data={[webPageLd, breadcrumbLd, softwareLd]} />
       <section className="border-b py-16 md:py-20">
         <div className="container mx-auto px-4 md:px-6">
           <div className="mx-auto max-w-3xl text-center">

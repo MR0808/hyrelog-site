@@ -14,10 +14,11 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Pricing",
+  title: "Pricing — Expected Plans and Usage (Beta)",
   description:
-    "HyreLog audit logging pricing for SOC2 audit trail needs: expected beta plans for immutable audit logs, tamper-evident audit trails, data residency controls, and enterprise security reviews.",
+    "Expected beta pricing for HyreLog audit logging plans. Join the waitlist for launch updates, limits, and enterprise options.",
   path: "/pricing",
+  image: "/og/pricing.png",
 });
 
 const tiers = [

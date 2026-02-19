@@ -2,12 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { JsonLd } from "@/components/seo/json-ld";
-import {
-  SITE_NAME,
-  SITE_URL,
-  breadcrumbJsonLd,
-  webPageJsonLd,
-} from "@/lib/seo";
+import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 import { HowItWorksEventSchema } from "@/components/marketing/how-it-works/event-schema";
 import { HowItWorksFinalCta } from "@/components/marketing/how-it-works/final-cta";
 import { HowItWorksHero } from "@/components/marketing/how-it-works/hero";
@@ -16,38 +11,16 @@ import { HowItWorksSecurityFaq } from "@/components/marketing/how-it-works/secur
 import { HowItWorksStepper } from "@/components/marketing/how-it-works/stepper";
 
 const PATH = "/how-it-works";
-const URL = `${SITE_URL}${PATH}`;
-const TITLE = "How HyreLog works — Immutable, region-aware audit logging";
+const TITLE = "How It Works — From Events to Evidence in 3 Steps";
 const DESCRIPTION =
-  "Capture audit events via API/SDK, protect with tamper-evident integrity and residency controls, and prove compliance with auditor-ready exports.";
-const OG_IMAGE = `${SITE_URL}/og-default.png`;
+  "Send audit events via API/SDK, protect them with tamper-evident integrity and regional controls, and export evidence auditors trust.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: TITLE,
   description: DESCRIPTION,
-  alternates: {
-    canonical: URL,
-    languages: {
-      "en-US": URL,
-      "x-default": URL,
-    },
-  },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: URL,
-    siteName: SITE_NAME,
-    type: "website",
-    locale: "en_US",
-    images: [OG_IMAGE],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-    images: [OG_IMAGE],
-  },
-};
+  path: PATH,
+  image: "/og/how-it-works.png",
+});
 
 export default function HowItWorksPage() {
   const webPageLd = webPageJsonLd({

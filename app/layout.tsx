@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { GoogleAnalytics } from "@/components/analytics/ga";
-import { buildMetadata, organizationJsonLd, softwareApplicationJsonLd } from "@/lib/seo";
+import { buildMetadata, canonicalUrl, organizationJsonLd, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,10 +19,24 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   ...buildMetadata({
-    title: "HyreLog",
+    title: "HyreLog — Immutable Audit Logging for SaaS",
     description:
-      "Compliance-grade audit logging infrastructure. Immutable, tamper-evident audit trails with multi-region data residency and auditor-ready exports for SOC2, GDPR, and enterprise security reviews.",
+      "Compliance-grade audit logging with tamper-evident integrity, regional data residency controls, and auditor-ready exports.",
+    path: "/",
+    image: "/og/default.png",
   }),
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "HyreLog — Immutable Audit Logging for SaaS",
+    template: "%s — HyreLog",
+  },
+  alternates: {
+    canonical: canonicalUrl("/"),
+  },
+  icons: {
+    icon: [{ url: "/favicon.ico" }, { url: "/icon.png", sizes: "512x512", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     title: "HyreLog",
@@ -35,7 +49,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const orgLd = organizationJsonLd();
-  const appLd = softwareApplicationJsonLd();
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -44,12 +57,6 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(orgLd),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(appLd),
           }}
         />
       </head>

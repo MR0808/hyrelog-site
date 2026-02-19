@@ -16,10 +16,11 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, buildMetadata, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "HyreLog",
+  title: "HyreLog — Immutable Audit Logging for SaaS",
   description:
-    "Compliance-grade audit logging infrastructure with immutable trails, region-aware residency, and auditor-ready exports.",
+    "Compliance-grade audit logging with tamper-evident integrity, regional data residency controls, and auditor-ready exports.",
   path: "/",
+  image: "/og/default.png",
 });
 
 const steps = [
