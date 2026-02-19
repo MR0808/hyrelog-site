@@ -9,7 +9,15 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
-import { LayoutGrid, List, ChevronLeft, ChevronRight, PanelLeftClose, PanelLeft } from "lucide-react";
+import {
+  LayoutGrid,
+  List,
+  ChevronLeft,
+  ChevronRight,
+  PanelLeftClose,
+  PanelLeft,
+  SlidersHorizontal,
+} from "lucide-react";
 
 const PER_PAGE_GRID = 9;
 const PER_PAGE_LIST = 10;
@@ -37,6 +45,7 @@ export function BlogListingClient({
   const [sort, setSort] = useState<SortKey>("date-desc");
   const [page, setPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const selectedTag = tagFromUrl ?? null;
   const selectedCategory = categoryFromUrl ?? null;
@@ -82,108 +91,125 @@ export function BlogListingClient({
   const start = (currentPage - 1) * perPage;
   const paginated = filtered.slice(start, start + perPage);
 
+  const filterNav = (
+    <nav className="space-y-6" aria-label="Blog filters">
+      {categories.length > 0 && (
+        <div>
+          <h3 className="mb-2 text-sm font-semibold text-foreground">Categories</h3>
+          <ul className="space-y-1.5">
+            <li>
+              <Link
+                href="/blog"
+                className={cn(
+                  "block min-h-10 rounded-md px-3 py-2 text-sm transition-colors",
+                  !selectedCategory && !selectedTag
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                All
+              </Link>
+            </li>
+            {categories.map((cat) => (
+              <li key={cat}>
+                <Link
+                  href={`/blog?category=${encodeURIComponent(cat)}`}
+                  className={cn(
+                    "block min-h-10 rounded-md px-3 py-2 text-sm transition-colors",
+                    selectedCategory === cat
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  {cat}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {tags.length > 0 && (
+        <div>
+          <h3 className="mb-2 text-sm font-semibold text-foreground">Tags</h3>
+          <ul className="space-y-1.5">
+            <li>
+              <Link
+                href="/blog"
+                className={cn(
+                  "block min-h-10 rounded-md px-3 py-2 text-sm transition-colors",
+                  !selectedTag && !selectedCategory
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                All
+              </Link>
+            </li>
+            {tags.map((tag) => (
+              <li key={tag}>
+                <Link
+                  href={`/blog?tag=${encodeURIComponent(tag)}`}
+                  className={cn(
+                    "block min-h-10 rounded-md px-3 py-2 text-sm transition-colors",
+                    selectedTag === tag
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  {tag}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </nav>
+  );
+
   const sidebar = (
     <aside
       className={cn(
-        "shrink-0 border-r pr-6 transition-[width] ease-in-out",
-        sidebarOpen ? "w-56" : "w-0 overflow-hidden pr-0 opacity-0"
+        "hidden lg:block shrink-0 border-r transition-[width,opacity,padding] ease-in-out",
+        sidebarOpen ? "w-56 pr-6 opacity-100" : "w-0 overflow-hidden pr-0 opacity-0"
       )}
     >
-      <nav className="space-y-6" aria-label="Blog filters">
-        {categories.length > 0 && (
-          <div>
-            <h3 className="mb-2 text-sm font-semibold text-foreground">Categories</h3>
-            <ul className="space-y-1">
-              <li>
-                <Link
-                  href="/blog"
-                  className={cn(
-                    "block rounded-md px-2 py-1.5 text-sm transition-colors",
-                    !selectedCategory && !selectedTag
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  All
-                </Link>
-              </li>
-              {categories.map((cat) => (
-                <li key={cat}>
-                  <Link
-                    href={`/blog?category=${encodeURIComponent(cat)}`}
-                    className={cn(
-                      "block rounded-md px-2 py-1.5 text-sm transition-colors",
-                      selectedCategory === cat
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                    )}
-                  >
-                    {cat}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {tags.length > 0 && (
-          <div>
-            <h3 className="mb-2 text-sm font-semibold text-foreground">Tags</h3>
-            <ul className="space-y-1">
-              <li>
-                <Link
-                  href="/blog"
-                  className={cn(
-                    "block rounded-md px-2 py-1.5 text-sm transition-colors",
-                    !selectedTag && !selectedCategory
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  All
-                </Link>
-              </li>
-              {tags.map((tag) => (
-                <li key={tag}>
-                  <Link
-                    href={`/blog?tag=${encodeURIComponent(tag)}`}
-                    className={cn(
-                      "block rounded-md px-2 py-1.5 text-sm transition-colors",
-                      selectedTag === tag
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                    )}
-                  >
-                    {tag}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </nav>
+      {filterNav}
     </aside>
   );
 
   return (
-    <div className="mt-8 flex gap-6">
+    <div className="mt-8 flex flex-col gap-6 lg:flex-row">
       {sidebar}
 
       <div className="min-w-0 flex-1 space-y-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={() => setSidebarOpen((o) => !o)}
-              aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-            >
-              {sidebarOpen ? (
-                <PanelLeftClose className="size-4" />
-              ) : (
-                <PanelLeft className="size-4" />
-              )}
-            </Button>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="h-10 px-3 lg:hidden"
+                onClick={() => setMobileFiltersOpen((o) => !o)}
+                aria-label={mobileFiltersOpen ? "Hide filters" : "Show filters"}
+              >
+                <SlidersHorizontal className="mr-2 size-4" />
+                {mobileFiltersOpen ? "Hide filters" : "Filters"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="hidden size-10 shrink-0 lg:inline-flex"
+                onClick={() => setSidebarOpen((o) => !o)}
+                aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+              >
+                {sidebarOpen ? (
+                  <PanelLeftClose className="size-4" />
+                ) : (
+                  <PanelLeft className="size-4" />
+                )}
+              </Button>
+            </div>
             <Input
               type="search"
               placeholder="Search posts..."
@@ -192,11 +218,11 @@ export function BlogListingClient({
                 setQuery(e.target.value);
                 setPage(1);
               }}
-              className="max-w-sm"
+              className="w-full sm:max-w-sm"
               aria-label="Search blog posts"
             />
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
             <span className="text-sm text-muted-foreground">Sort:</span>
             <select
               value={sort}
@@ -204,7 +230,7 @@ export function BlogListingClient({
                 setSort(e.target.value as SortKey);
                 setPage(1);
               }}
-              className="rounded-md border bg-background px-2 py-1.5 text-sm"
+              className="h-10 rounded-md border bg-background px-3 py-1.5 text-sm"
               aria-label="Sort posts"
             >
               <option value="date-desc">Newest first</option>
@@ -217,7 +243,7 @@ export function BlogListingClient({
                 type="button"
                 variant="ghost"
                 size="icon"
-                className={cn("rounded-r-none", viewMode === "list" && "bg-muted")}
+                className={cn("size-10 rounded-r-none", viewMode === "list" && "bg-muted")}
                 onClick={() => {
                   setViewMode("list");
                   setPage(1);
@@ -230,7 +256,7 @@ export function BlogListingClient({
                 type="button"
                 variant="ghost"
                 size="icon"
-                className={cn("rounded-l-none", viewMode === "grid" && "bg-muted")}
+                className={cn("size-10 rounded-l-none", viewMode === "grid" && "bg-muted")}
                 onClick={() => {
                   setViewMode("grid");
                   setPage(1);
@@ -242,6 +268,12 @@ export function BlogListingClient({
             </div>
           </div>
         </div>
+
+        {mobileFiltersOpen && (
+          <div className="rounded-xl border bg-card p-4 lg:hidden">
+            <div className="max-h-72 overflow-y-auto pr-1">{filterNav}</div>
+          </div>
+        )}
 
         <div className="border-t pt-8">
           {paginated.length === 0 ? (
@@ -260,7 +292,7 @@ export function BlogListingClient({
               ))}
             </ul>
           ) : (
-            <ul className="grid grid-cols-3 gap-6 list-none p-0 m-0">
+            <ul className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 xl:grid-cols-3">
               {paginated.map((post) => (
                 <li key={post.slug}>
                   <BlogCard
@@ -406,15 +438,18 @@ function BlogCard({
   }
 
   return (
-    <article className="flex gap-4">
+    <article className="flex flex-col gap-4 sm:flex-row">
       {image && (
-        <Link href={postLink} className="relative h-24 w-40 shrink-0 overflow-hidden rounded-lg bg-muted group block">
+        <Link
+          href={postLink}
+          className="group block relative h-48 w-full shrink-0 overflow-hidden rounded-lg bg-muted sm:h-24 sm:w-40"
+        >
           <Image
             src={image}
             alt=""
             fill
             className="object-cover transition-opacity group-hover:opacity-90"
-            sizes="160px"
+            sizes="(max-width: 640px) 100vw, 160px"
           />
         </Link>
       )}

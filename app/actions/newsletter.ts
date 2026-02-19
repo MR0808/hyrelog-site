@@ -5,6 +5,7 @@ import { z } from "zod";
 import { rateLimitOrThrow } from "@/lib/security/rate-limit";
 import { validateHoneypot } from "@/lib/security/honeypot";
 import { verifyTurnstile } from "@/lib/security/turnstile";
+import { extractTurnstileToken } from "@/lib/security/turnstile-token";
 import { getClientIp } from "@/lib/security/ip";
 import { getUserAgent } from "@/lib/security/ua";
 import { sendNewsletterConfirmEmail } from "@/lib/email/resend";
@@ -35,7 +36,7 @@ export async function subscribeNewsletter(
     const raw = {
       email: formData.get("email"),
       consent: formData.get("consent"),
-      turnstileToken: formData.get("turnstileToken"),
+      turnstileToken: extractTurnstileToken(formData),
       pagePath: formData.get("pagePath"),
       sourcePlacement: formData.get("sourcePlacement"),
     };

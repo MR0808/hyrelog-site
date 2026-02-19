@@ -5,6 +5,7 @@ import { z } from "zod";
 import { rateLimitOrThrow } from "@/lib/security/rate-limit";
 import { validateHoneypot } from "@/lib/security/honeypot";
 import { verifyTurnstile } from "@/lib/security/turnstile";
+import { extractTurnstileToken } from "@/lib/security/turnstile-token";
 import { getClientIp } from "@/lib/security/ip";
 import { getUserAgent } from "@/lib/security/ua";
 import { sendWaitlistThanksEmail } from "@/lib/email/resend";
@@ -37,7 +38,7 @@ export async function submitWaitlist(
       company: formData.get("company"),
       message: formData.get("message"),
       consent: formData.get("consent"),
-      turnstileToken: formData.get("turnstileToken"),
+      turnstileToken: extractTurnstileToken(formData),
       pagePath: formData.get("pagePath"),
     };
     const parsed = WaitlistSchema.safeParse(raw);

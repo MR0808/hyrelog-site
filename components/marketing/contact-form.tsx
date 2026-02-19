@@ -1,42 +1,110 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { TurnstileWidget } from "@/components/forms/turnstile-widget";
+import { useTurnstileDebugHint } from "@/components/forms/use-turnstile-debug-hint";
 import { submitContact } from "@/app/actions/contact";
 import { trackEvent } from "@/lib/analytics";
 
-function ContactFormInner({
-  state,
-  pending,
-}: {
-  state: { ok: boolean; message: string } | null;
-  pending: boolean;
-}) {
+export function ContactForm() {
+  const pathname = usePathname();
+  const { formRef, turnstileDebugHint, updateTurnstileDebugHint } = useTurnstileDebugHint();
+  const [formValues, setFormValues] = useState({
+    name: "",
+    email: "",
+    company: "",
+    message: "",
+    consent: false,
+  });
+  const [state, formAction, isPending] = useActionState(
+    async (_prev: { ok: boolean; message: string } | null, formData: FormData) => {
+      return submitContact(formData);
+    },
+    null
+  );
+
+  useEffect(() => {
+    updateTurnstileDebugHint(state);
+  }, [state, updateTurnstileDebugHint]);
+
+  useEffect(() => {
+    if (state?.ok) {
+      trackEvent("contact_submit_success", { page: pathname ?? "/contact" });
+      setFormValues({
+        name: "",
+        email: "",
+        company: "",
+        message: "",
+        consent: false,
+      });
+      if (typeof window.turnstile?.reset === "function") {
+        window.turnstile.reset();
+      }
+    }
+  }, [state?.ok, pathname]);
+
   return (
-    <>
+    <form ref={formRef} action={formAction} className="mt-8 space-y-6">
+      <div className="absolute -left-[9999px] top-0 opacity-0" aria-hidden>
+        <label htmlFor="contact-website">Website</label>
+        <input
+          id="contact-website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+      <input type="hidden" name="pagePath" value={pathname ?? ""} />
+      {turnstileDebugHint && (
+        <p className="text-xs text-amber-700 dark:text-amber-400" role="status">
+          {turnstileDebugHint}
+        </p>
+      )}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <label htmlFor="contact-name" className="text-sm font-medium">
             Name *
           </label>
-          <Input id="contact-name" name="name" required placeholder="Jane Smith" />
+          <Input
+            id="contact-name"
+            name="name"
+            required
+            placeholder="Jane Smith"
+            value={formValues.name}
+            onChange={(e) => setFormValues((prev) => ({ ...prev, name: e.target.value }))}
+          />
         </div>
         <div className="space-y-2">
           <label htmlFor="contact-email" className="text-sm font-medium">
             Email *
           </label>
-          <Input id="contact-email" name="email" type="email" required placeholder="jane@company.com" />
+          <Input
+            id="contact-email"
+            name="email"
+            type="email"
+            required
+            placeholder="jane@company.com"
+            value={formValues.email}
+            onChange={(e) => setFormValues((prev) => ({ ...prev, email: e.target.value }))}
+          />
         </div>
       </div>
       <div className="space-y-2">
         <label htmlFor="contact-company" className="text-sm font-medium">
           Company
         </label>
-        <Input id="contact-company" name="company" placeholder="Acme Inc." />
+        <Input
+          id="contact-company"
+          name="company"
+          placeholder="Acme Inc."
+          value={formValues.company}
+          onChange={(e) => setFormValues((prev) => ({ ...prev, company: e.target.value }))}
+        />
       </div>
       <div className="space-y-2">
         <label htmlFor="contact-message" className="text-sm font-medium">
@@ -48,6 +116,8 @@ function ContactFormInner({
           required
           rows={5}
           placeholder="Tell us about your audit and compliance needs..."
+          value={formValues.message}
+          onChange={(e) => setFormValues((prev) => ({ ...prev, message: e.target.value }))}
         />
       </div>
       <div className="flex items-center gap-2">
@@ -57,6 +127,8 @@ function ContactFormInner({
           name="consent"
           value="on"
           className="rounded border-input"
+          checked={formValues.consent}
+          onChange={(e) => setFormValues((prev) => ({ ...prev, consent: e.target.checked }))}
         />
         <label htmlFor="contact-consent" className="text-sm text-muted-foreground">
           I agree to be contacted about HyreLog (optional).
@@ -73,45 +145,9 @@ function ContactFormInner({
           {state.message}
         </p>
       )}
-      <Button type="submit" disabled={pending}>
-        {pending ? "Sending…" : "Send message"}
+      <Button type="submit" disabled={isPending}>
+        {isPending ? "Sending…" : "Send message"}
       </Button>
-    </>
-  );
-}
-
-export function ContactForm() {
-  const pathname = usePathname();
-  const [state, formAction, isPending] = useActionState(
-    async (_prev: { ok: boolean; message: string } | null, formData: FormData) => {
-      return submitContact(formData);
-    },
-    null
-  );
-
-  useEffect(() => {
-    if (state?.ok) {
-      trackEvent("contact_submit_success", { page: pathname ?? "/contact" });
-      if (typeof window.turnstile?.reset === "function") {
-        window.turnstile.reset();
-      }
-    }
-  }, [state?.ok, pathname]);
-
-  return (
-    <form action={formAction} className="mt-8 space-y-6">
-      <div className="absolute -left-[9999px] top-0 opacity-0" aria-hidden>
-        <label htmlFor="contact-website">Website</label>
-        <input
-          id="contact-website"
-          name="website"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-        />
-      </div>
-      <input type="hidden" name="pagePath" value={pathname ?? ""} />
-      <ContactFormInner state={state} pending={isPending} />
     </form>
   );
 }

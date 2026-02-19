@@ -109,7 +109,7 @@ export default function AboutPage() {
               </p>
               <p>
                 HyreLog was built as dedicated infrastructure for this exact moment. If you want to{" "}
-                <Link href="/product" className="underline underline-offset-4">
+                <Link href="/how-it-works" className="underline underline-offset-4">
                   see how HyreLog works
                 </Link>
                 , review our{" "}

@@ -1,20 +1,29 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TurnstileWidget } from "@/components/forms/turnstile-widget";
+import { useTurnstileDebugHint } from "@/components/forms/use-turnstile-debug-hint";
 import { requestLeadMagnet } from "@/app/actions/lead-magnet";
 
 function FormInner({
   state,
   pending,
   magnet,
+  email,
+  consent,
+  onEmailChange,
+  onConsentChange,
 }: {
   state: { ok: boolean; message: string } | null;
   pending: boolean;
   magnet: string;
+  email: string;
+  consent: boolean;
+  onEmailChange: (value: string) => void;
+  onConsentChange: (checked: boolean) => void;
 }) {
   return (
     <>
@@ -24,7 +33,15 @@ function FormInner({
           <label htmlFor="lm-email" className="text-sm font-medium">
             Email *
           </label>
-          <Input id="lm-email" name="email" type="email" required placeholder="you@company.com" />
+          <Input
+            id="lm-email"
+            name="email"
+            type="email"
+            required
+            placeholder="you@company.com"
+            value={email}
+            onChange={(e) => onEmailChange(e.target.value)}
+          />
         </div>
         <div className="flex items-center gap-2">
           <input
@@ -33,6 +50,8 @@ function FormInner({
             name="consent"
             value="on"
             className="rounded border-input"
+            checked={consent}
+            onChange={(e) => onConsentChange(e.target.checked)}
           />
           <label htmlFor="lm-consent" className="text-sm text-muted-foreground">
             I agree to receive product updates (optional).
@@ -59,6 +78,9 @@ function FormInner({
 
 export function LeadMagnetForm({ magnet }: { magnet: string }) {
   const pathname = usePathname();
+  const { formRef, turnstileDebugHint, updateTurnstileDebugHint } = useTurnstileDebugHint();
+  const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
   const [state, formAction, isPending] = useActionState(
     async (_prev: { ok: boolean; message: string } | null, formData: FormData) => {
       return requestLeadMagnet(formData);
@@ -67,18 +89,37 @@ export function LeadMagnetForm({ magnet }: { magnet: string }) {
   );
 
   useEffect(() => {
+    updateTurnstileDebugHint(state);
+  }, [state, updateTurnstileDebugHint]);
+
+  useEffect(() => {
     if (state?.ok && typeof window.turnstile?.reset === "function") {
+      setEmail("");
+      setConsent(false);
       window.turnstile.reset();
     }
   }, [state?.ok]);
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form ref={formRef} action={formAction} className="space-y-4">
       <div className="absolute -left-[9999px] top-0 opacity-0" aria-hidden>
         <input name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
       <input type="hidden" name="pagePath" value={pathname ?? ""} />
-      <FormInner state={state} pending={isPending} magnet={magnet} />
+      {turnstileDebugHint && (
+        <p className="text-xs text-amber-700 dark:text-amber-400" role="status">
+          {turnstileDebugHint}
+        </p>
+      )}
+      <FormInner
+        state={state}
+        pending={isPending}
+        magnet={magnet}
+        email={email}
+        consent={consent}
+        onEmailChange={setEmail}
+        onConsentChange={setConsent}
+      />
     </form>
   );
 }

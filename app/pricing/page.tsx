@@ -236,8 +236,11 @@ export default function PricingPage() {
                       <td className="sticky left-0 bg-card px-4 py-3 font-medium capitalize">
                         {row[0]}
                       </td>
-                      {row.slice(1).map((value) => (
-                        <td key={`${row[0]}-${value}`} className="px-4 py-3 text-muted-foreground">
+                      {row.slice(1).map((value, idx) => (
+                        <td
+                          key={`${row[0]}-${idx}-${value}`}
+                          className="px-4 py-3 text-muted-foreground"
+                        >
                           {value}
                         </td>
                       ))}

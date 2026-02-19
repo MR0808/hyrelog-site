@@ -1,7 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Logo } from "@/components/marketing/logo";
-import { ProductMock } from "@/components/marketing/product-mock";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -43,7 +43,16 @@ export function AboutHero() {
           <div className="relative">
             <div className="absolute -inset-4 rounded-3xl bg-primary/8 blur-2xl" aria-hidden />
             <div className="relative rounded-3xl border bg-card/80 p-4 shadow-2xl backdrop-blur">
-              <ProductMock />
+              <div className="relative aspect-4/3 w-full overflow-hidden rounded-2xl bg-muted">
+                <Image
+                  src="/resources/about.jpg"
+                  alt="HyreLog team and product mission visual"
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              </div>
             </div>
           </div>
         </div>
